@@ -7,6 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Mail, User, Building2, Phone } from 'lucide-react';
+import { 
+  sanitizeString, 
+  validateEmail, 
+  sanitizePhoneNumber,
+  validateTextLength,
+  sanitizeFormData 
+} from '@/lib/security';
 
 interface ContactFormDialogProps {
   open: boolean;
@@ -36,7 +43,29 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    let sanitizedValue = value;
+    
+    // Apply field-specific sanitization
+    switch (field) {
+      case 'name':
+      case 'company':
+      case 'title':
+        sanitizedValue = sanitizeString(value, 100);
+        break;
+      case 'email':
+        sanitizedValue = sanitizeString(value, 254);
+        break;
+      case 'phone':
+        sanitizedValue = sanitizePhoneNumber(value);
+        break;
+      case 'message':
+        sanitizedValue = sanitizeString(value, 1000);
+        break;
+      default:
+        sanitizedValue = sanitizeString(value);
+    }
+    
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
   };
 
   const resetForm = () => {
@@ -51,11 +80,36 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
   };
 
   const handleSubmit = async () => {
-    // Validate required fields
-    if (!formData.name || !formData.email) {
+    // Sanitize all form data before validation
+    const sanitizedData = sanitizeFormData(formData);
+    
+    // Enhanced validation
+    if (!sanitizedData.name || !sanitizedData.email) {
       toast({
         title: "Fehlerhafte Eingabe",
         description: "Name und E-Mail sind Pflichtfelder.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Validate text lengths
+    if (!validateTextLength(sanitizedData.name, 100) || 
+        !validateTextLength(sanitizedData.email, 254) ||
+        !validateTextLength(sanitizedData.message, 1000)) {
+      toast({
+        title: "Eingabe zu lang",
+        description: "Bitte kürzen Sie Ihre Eingaben.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Validate email format
+    if (!validateEmail(sanitizedData.email)) {
+      toast({
+        title: "Ungültige E-Mail",
+        description: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         variant: "destructive"
       });
       return;
@@ -64,25 +118,25 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
     setIsSubmitting(true);
 
     try {
-      // Create email content
-      const subject = `Neue Kontaktanfrage von ${formData.name}`;
+      // Use sanitized data for email content
+      const subject = `Neue Kontaktanfrage von ${sanitizedData.name}`;
       const body = `Hallo,
 
-${formData.name} möchte seine Kontaktdaten mit Ihnen teilen:
+${sanitizedData.name} möchte seine Kontaktdaten mit Ihnen teilen:
 
-Name: ${formData.name}
-E-Mail: ${formData.email}
-Telefon: ${formData.phone || 'Nicht angegeben'}
-Firma: ${formData.company || 'Nicht angegeben'}
-Position: ${formData.title || 'Nicht angegeben'}
+Name: ${sanitizedData.name}
+E-Mail: ${sanitizedData.email}
+Telefon: ${sanitizedData.phone || 'Nicht angegeben'}
+Firma: ${sanitizedData.company || 'Nicht angegeben'}
+Position: ${sanitizedData.title || 'Nicht angegeben'}
 
-${formData.message ? `Nachricht:\n${formData.message}` : ''}
+${sanitizedData.message ? `Nachricht:\n${sanitizedData.message}` : ''}
 
 Viele Grüße,
-${formData.name}`;
+${sanitizedData.name}`;
 
-      // Open email client
-      const mailtoUrl = `mailto:${ownerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // Open email client with sanitized data
+      const mailtoUrl = `mailto:${encodeURIComponent(ownerEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(mailtoUrl);
 
       toast({

@@ -8,6 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { Upload, X, Camera, Building2 } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
+import { 
+  sanitizeString, 
+  validateEmail, 
+  validateURL, 
+  validateHexColor, 
+  validateImageFile,
+  sanitizePhoneNumber 
+} from '@/lib/security';
 
 interface ConfigDialogProps {
   open: boolean;
@@ -27,10 +35,70 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
   const [formData, setFormData] = useState<ContactData>(contactData);
 
   const handleInputChange = (field: keyof ContactData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    let sanitizedValue = value;
+    
+    // Apply field-specific sanitization and validation
+    switch (field) {
+      case 'name':
+      case 'title':
+      case 'company':
+      case 'address':
+        sanitizedValue = sanitizeString(value, field === 'address' ? 200 : 100);
+        break;
+      case 'email':
+        sanitizedValue = sanitizeString(value, 254);
+        break;
+      case 'phone':
+        sanitizedValue = sanitizePhoneNumber(value);
+        break;
+      case 'website':
+        sanitizedValue = sanitizeString(value, 2000);
+        break;
+      case 'customColor':
+        // Only update if valid hex color or empty
+        if (value === '' || validateHexColor(value)) {
+          sanitizedValue = value;
+        } else {
+          return; // Don't update if invalid
+        }
+        break;
+      default:
+        sanitizedValue = sanitizeString(value);
+    }
+    
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
   };
 
   const handleSave = () => {
+    // Basic validation before saving
+    if (!formData.name || !formData.email) {
+      toast({
+        title: "Required Fields Missing",
+        description: "Name and email are required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Additional client-side validation
+    if (formData.email && !validateEmail(formData.email)) {
+      toast({
+        title: "Ungültige E-Mail",
+        description: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (formData.website && formData.website !== '' && !validateURL(formData.website)) {
+      toast({
+        title: "Ungültige Website",
+        description: "Website muss mit https:// beginnen und gültig sein.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     onSave(formData);
     onOpenChange(false);
     toast({
@@ -44,17 +112,19 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
   };
 
   const handleColorChange = (color: string) => {
-    // Validate hex color
-    if (/^#[0-9A-F]{6}$/i.test(color)) {
+    // Validate hex color using security utility
+    if (color === '' || validateHexColor(color)) {
       setFormData(prev => ({ ...prev, customColor: color }));
     }
   };
 
   const handleImageUpload = (field: 'profileImage' | 'companyLogo', file: File) => {
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    // Enhanced security validation
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
       toast({
-        title: "Datei zu groß",
-        description: "Bitte wählen Sie eine Datei unter 5MB.",
+        title: "Ungültige Datei",
+        description: validation.error || "Die Datei konnte nicht validiert werden.",
         variant: "destructive"
       });
       return;
@@ -270,7 +340,7 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
             </div>
             
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+              Unterstützte Formate: JPG, PNG (max. 5MB)
             </p>
           </Card>
 

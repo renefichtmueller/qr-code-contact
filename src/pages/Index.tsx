@@ -7,6 +7,7 @@ import { SharingOptions } from '@/components/SharingOptions';
 import { ConfigDialog } from '@/components/ConfigDialog';
 import { ContactFormDialog } from '@/components/ContactFormDialog';
 import { Settings, Share2, UserPlus } from 'lucide-react';
+import { safeJSONParse } from '@/lib/security';
 
 export interface ContactData {
   name: string;
@@ -39,17 +40,32 @@ const Index = () => {
   const [showSharing, setShowSharing] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount with safe parsing
   useEffect(() => {
     const saved = localStorage.getItem('contactData');
     if (saved) {
-      setContactData(JSON.parse(saved));
+      const defaultData: ContactData = {
+        name: 'Max Mustermann',
+        title: 'Senior Developer',
+        company: 'TechCorp GmbH',
+        email: 'max.mustermann@techcorp.de',
+        phone: '+49 123 456789',
+        website: 'https://techcorp.de',
+        address: 'Musterstraße 123, 12345 Berlin',
+        template: 'modern',
+        customColor: '#a855f7'
+      };
+      const parsedData = safeJSONParse(saved, defaultData);
+      setContactData(parsedData);
     }
   }, []);
 
-  // Save to localStorage when data changes
+  // Save to localStorage when data changes with basic validation
   useEffect(() => {
-    localStorage.setItem('contactData', JSON.stringify(contactData));
+    // Basic validation before saving
+    if (contactData.name && contactData.email) {
+      localStorage.setItem('contactData', JSON.stringify(contactData));
+    }
   }, [contactData]);
 
   return (
