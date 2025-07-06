@@ -36,31 +36,27 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
 
   return (
     <Card className={`overflow-hidden ${template.cardClass}`}>
-      {/* Header with gradient */}
+      {/* Header with gradient and company logo */}
       <div 
-        className={`h-32 bg-gradient-to-r ${template.gradient} relative`}
+        className={`h-32 bg-gradient-to-r ${template.gradient} relative flex items-center justify-center`}
         style={contactData.customColor ? customStyle : {}}
       >
         <div className="absolute inset-0 bg-black/10" />
+        {contactData.companyLogo && (
+          <div className="relative z-10 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+            <img 
+              src={contactData.companyLogo} 
+              alt={`${contactData.company} Logo`}
+              className="w-20 h-12 object-contain"
+            />
+          </div>
+        )}
       </div>
 
       {/* Profile Content */}
       <div className="relative px-6 pb-6">
-        {/* Company Logo Banner */}
-        {contactData.companyLogo && (
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="bg-white rounded-lg shadow-lg border-2 border-white p-2">
-              <img 
-                src={contactData.companyLogo} 
-                alt={`${contactData.company} Logo`}
-                className="w-16 h-12 object-contain"
-              />
-            </div>
-          </div>
-        )}
-
         {/* Profile Image */}
-        <div className={`relative mb-4 ${contactData.companyLogo ? 'mt-8' : '-mt-16'}`}>
+        <div className="relative -mt-16 mb-4">
           <div className="w-24 h-24 rounded-full bg-white shadow-lg border-4 border-white mx-auto flex items-center justify-center">
             {contactData.profileImage ? (
               <img 
