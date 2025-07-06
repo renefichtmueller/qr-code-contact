@@ -46,8 +46,21 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
 
       {/* Profile Content */}
       <div className="relative px-6 pb-6">
+        {/* Company Logo Banner */}
+        {contactData.companyLogo && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="bg-white rounded-lg shadow-lg border-2 border-white p-2">
+              <img 
+                src={contactData.companyLogo} 
+                alt={`${contactData.company} Logo`}
+                className="w-16 h-12 object-contain"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Profile Image */}
-        <div className="relative -mt-16 mb-4">
+        <div className={`relative mb-4 ${contactData.companyLogo ? 'mt-8' : '-mt-16'}`}>
           <div className="w-24 h-24 rounded-full bg-white shadow-lg border-4 border-white mx-auto flex items-center justify-center">
             {contactData.profileImage ? (
               <img 
@@ -71,18 +84,9 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
           <p className="text-primary font-medium mb-1">
             {contactData.title}
           </p>
-          <div className="flex items-center justify-center gap-2 mb-2">
-            {contactData.companyLogo && (
-              <img 
-                src={contactData.companyLogo} 
-                alt={`${contactData.company} Logo`}
-                className="w-6 h-6 object-contain"
-              />
-            )}
-            <Badge variant="secondary">
-              {contactData.company}
-            </Badge>
-          </div>
+          <Badge variant="secondary" className="mb-2">
+            {contactData.company}
+          </Badge>
         </div>
 
         {/* Contact Information */}
