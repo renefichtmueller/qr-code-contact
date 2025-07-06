@@ -17,6 +17,7 @@ export interface ContactData {
   website: string;
   address: string;
   profileImage?: string;
+  companyLogo?: string;
   template: string;
   customColor?: string;
 }

@@ -71,9 +71,18 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
           <p className="text-primary font-medium mb-1">
             {contactData.title}
           </p>
-          <Badge variant="secondary" className="mb-2">
-            {contactData.company}
-          </Badge>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            {contactData.companyLogo && (
+              <img 
+                src={contactData.companyLogo} 
+                alt={`${contactData.company} Logo`}
+                className="w-6 h-6 object-contain"
+              />
+            )}
+            <Badge variant="secondary">
+              {contactData.company}
+            </Badge>
+          </div>
         </div>
 
         {/* Contact Information */}

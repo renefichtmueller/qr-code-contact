@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
+import { Upload, X, Camera, Building2 } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
 
 interface ConfigDialogProps {
@@ -47,6 +48,36 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
     if (/^#[0-9A-F]{6}$/i.test(color)) {
       setFormData(prev => ({ ...prev, customColor: color }));
     }
+  };
+
+  const handleImageUpload = (field: 'profileImage' | 'companyLogo', file: File) => {
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      toast({
+        title: "Datei zu groß",
+        description: "Bitte wählen Sie eine Datei unter 5MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setFormData(prev => ({ ...prev, [field]: result }));
+      toast({
+        title: "Bild hochgeladen",
+        description: `${field === 'profileImage' ? 'Profilbild' : 'Firmenlogo'} wurde erfolgreich hochgeladen.`
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = (field: 'profileImage' | 'companyLogo') => {
+    setFormData(prev => ({ ...prev, [field]: undefined }));
+    toast({
+      title: "Bild entfernt",
+      description: `${field === 'profileImage' ? 'Profilbild' : 'Firmenlogo'} wurde entfernt.`
+    });
   };
 
   return (
@@ -126,6 +157,121 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                 placeholder="Straße, PLZ Ort"
               />
             </div>
+          </Card>
+
+          {/* Image Uploads */}
+          <Card className="p-4">
+            <h3 className="font-semibold mb-4">Bilder</h3>
+            
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Profile Image */}
+              <div>
+                <Label className="flex items-center gap-2 mb-3">
+                  <Camera className="h-4 w-4" />
+                  Profilbild
+                </Label>
+                <div className="space-y-3">
+                  {formData.profileImage ? (
+                    <div className="relative">
+                      <img 
+                        src={formData.profileImage} 
+                        alt="Profilbild Preview"
+                        className="w-24 h-24 rounded-full object-cover border-2 border-border mx-auto"
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                        onClick={() => removeImage('profileImage')}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="w-24 h-24 rounded-full border-2 border-dashed border-border mx-auto flex items-center justify-center">
+                      <Camera className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('profileImageInput')?.click()}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      {formData.profileImage ? 'Ändern' : 'Hochladen'}
+                    </Button>
+                    <input
+                      id="profileImageInput"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleImageUpload('profileImage', file);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Company Logo */}
+              <div>
+                <Label className="flex items-center gap-2 mb-3">
+                  <Building2 className="h-4 w-4" />
+                  Firmenlogo
+                </Label>
+                <div className="space-y-3">
+                  {formData.companyLogo ? (
+                    <div className="relative">
+                      <img 
+                        src={formData.companyLogo} 
+                        alt="Firmenlogo Preview"
+                        className="w-24 h-24 rounded-lg object-contain border-2 border-border mx-auto bg-white p-2"
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                        onClick={() => removeImage('companyLogo')}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="w-24 h-24 rounded-lg border-2 border-dashed border-border mx-auto flex items-center justify-center">
+                      <Building2 className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('companyLogoInput')?.click()}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      {formData.companyLogo ? 'Ändern' : 'Hochladen'}
+                    </Button>
+                    <input
+                      id="companyLogoInput"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleImageUpload('companyLogo', file);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground mt-4 text-center">
+              Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+            </p>
           </Card>
 
           {/* Template Selection */}
