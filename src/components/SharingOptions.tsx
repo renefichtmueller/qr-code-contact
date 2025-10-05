@@ -25,7 +25,8 @@ export const SharingOptions = ({ open, onOpenChange, contactData }: SharingOptio
   const supportsNFC = typeof window !== 'undefined' && 'NDEFReader' in window;
   const supportsBluetooth = typeof navigator !== 'undefined' && 'bluetooth' in navigator;
   const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
+  const inIframe = typeof window !== 'undefined' && window.self !== window.top;
+  const supportsWebShareEffective = supportsWebShare && !inIframe;
 
   const generateVCard = () => {
     return `BEGIN:VCARD
@@ -121,56 +122,72 @@ ${contactData.name}`;
   };
 
   const handleWebShare = async () => {
-    if (navigator.share) {
-      try {
-        const vCard = generateVCard();
-        
-        // Try to share vCard file (supports AirDrop on iOS)
-        if (navigator.canShare) {
-          const file = new File([vCard], `${contactData.name.replace(/\s+/g, '_')}.vcf`, {
-            type: 'text/vcard',
-          });
-          
-          const shareData = {
-            title: `${t('contactForm.title')}: ${contactData.name}`,
-            text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}`,
-            files: [file]
-          };
-          
-          if (navigator.canShare(shareData)) {
-            await navigator.share(shareData);
-            toast({
-              title: t('toasts.shared'),
-              description: 'Kontakt wurde geteilt (AirDrop verfügbar auf iOS)'
-            });
-            return;
-          }
-        }
-        
-        // Fallback: share text only
-        await navigator.share({
-          title: `${t('contactForm.title')}: ${contactData.name}`,
-          text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}\n${t('profile.email')}: ${contactData.email}\n${t('profile.phone')}: ${contactData.phone}`,
-        });
-        
-        toast({
-          title: t('toasts.shared'),
-          description: t('toasts.sharedDesc')
-        });
-      } catch (error: any) {
-        if (error.name !== 'AbortError') {
-          console.error('Error sharing:', error);
-          toast({
-            title: 'Fehler beim Teilen',
-            description: 'Das Teilen wurde abgebrochen oder ist fehlgeschlagen',
-            variant: 'destructive'
-          });
-        }
-      }
-    } else {
+    if (!supportsWebShare) {
       toast({
         title: t('toasts.webShareNotAvailable'),
         description: t('toasts.webShareNotAvailableDesc'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    // Web Share is blocked inside iframes (like the preview). Offer a helpful fallback.
+    if (inIframe) {
+      toast({
+        title: 'System-Teilen im Vorschau-Fenster blockiert',
+        description: 'Öffne die Seite in einem neuen Tab und versuche es erneut (AirDrop funktioniert dort).',
+        variant: 'destructive'
+      });
+      try { window.open(window.location.href, '_blank'); } catch {}
+      return;
+    }
+
+    try {
+      const vCard = generateVCard();
+
+      // 1) Try to share a vCard file (best for iOS AirDrop)
+      if (supportsShareFiles) {
+        const fileName = `${contactData.name.replace(/\s+/g, '_')}.vcf`;
+        // Try multiple MIME types for broader compatibility
+        const mimeTypes = ['text/vcard', 'text/x-vcard', 'text/directory'];
+        for (const type of mimeTypes) {
+          try {
+            const file = new File([vCard], fileName, { type });
+            const shareData: any = {
+              title: `${t('contactForm.title')}: ${contactData.name}`,
+              text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}`,
+              files: [file]
+            };
+            if ((navigator as any).canShare?.(shareData)) {
+              await (navigator as any).share(shareData);
+              toast({ title: t('toasts.shared'), description: 'Kontakt wurde geteilt (AirDrop möglich).' });
+              return;
+            }
+          } catch {/* try next type */}
+        }
+      }
+
+      // 2) Fallback: share text only
+      await navigator.share({
+        title: `${t('contactForm.title')}: ${contactData.name}`,
+        text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}\n${t('profile.email')}: ${contactData.email}\n${t('profile.phone')}: ${contactData.phone}`,
+      });
+      toast({ title: t('toasts.shared'), description: t('toasts.sharedDesc') });
+    } catch (error: any) {
+      console.error('Error sharing:', error);
+      // 3) Last resort: create a temporary vCard URL and prompt download
+      try {
+        const vCard = generateVCard();
+        const blob = new Blob([vCard], { type: 'text/vcard' });
+        const url = URL.createObjectURL(blob);
+        await navigator.share?.({ title: `${contactData.name}`, url });
+        URL.revokeObjectURL(url);
+        return;
+      } catch {}
+
+      toast({
+        title: 'Fehler beim Teilen',
+        description: 'Das Teilen wurde abgebrochen oder ist fehlgeschlagen',
         variant: 'destructive'
       });
     }
