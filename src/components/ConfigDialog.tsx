@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,13 @@ interface ConfigDialogProps {
 export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: ConfigDialogProps) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<ContactData>(contactData);
+
+  // Update formData when contactData or dialog state changes
+  useEffect(() => {
+    if (open) {
+      setFormData(contactData);
+    }
+  }, [open, contactData]);
 
   const templates = [
     { id: 'modern', name: t('templates.modern'), color: '#a855f7' },
