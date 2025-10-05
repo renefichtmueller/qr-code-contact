@@ -36,18 +36,19 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
 
   return (
     <Card className={`overflow-hidden ${template.cardClass}`}>
-      {/* Header with gradient and company logo */}
+      {/* Header with gradient */}
       <div 
-        className={`h-32 bg-gradient-to-r ${template.gradient} relative flex items-center justify-center`}
+        className={`h-32 bg-gradient-to-r ${template.gradient} relative`}
         style={contactData.customColor ? customStyle : {}}
       >
         <div className="absolute inset-0 bg-black/10" />
+        {/* Company logo positioned top right */}
         {contactData.companyLogo && (
-          <div className="relative z-10 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+          <div className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
             <img 
               src={contactData.companyLogo} 
               alt={`${contactData.company} Logo`}
-              className="w-20 h-12 object-contain"
+              className="w-16 h-10 object-contain"
             />
           </div>
         )}
