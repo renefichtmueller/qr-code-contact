@@ -19,6 +19,14 @@ export const SharingOptions = ({ open, onOpenChange, contactData }: SharingOptio
   const { t } = useTranslation();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
+  // Capability detection
+  const supportsWebShare = typeof navigator !== 'undefined' && 'share' in navigator;
+  const supportsShareFiles = typeof navigator !== 'undefined' && 'canShare' in navigator;
+  const supportsNFC = typeof window !== 'undefined' && 'NDEFReader' in window;
+  const supportsBluetooth = typeof navigator !== 'undefined' && 'bluetooth' in navigator;
+  const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+
   const generateVCard = () => {
     return `BEGIN:VCARD
 VERSION:3.0
@@ -257,6 +265,17 @@ ${contactData.name}`;
     });
   };
 
+  const copyVCardToClipboard = async () => {
+    try {
+      const vCard = generateVCard();
+      await navigator.clipboard.writeText(vCard);
+      toast({ title: 'Kopiert', description: 'vCard in Zwischenablage kopiert.' });
+    } catch (error) {
+      console.error('Clipboard error:', error);
+      toast({ title: 'Fehler', description: 'vCard konnte nicht kopiert werden.', variant: 'destructive' });
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
@@ -279,9 +298,14 @@ ${contactData.name}`;
             <p className="text-sm text-muted-foreground mb-4">
               {t('sharingDialog.qrCodeDescription')}
             </p>
-            <Button onClick={downloadVCard} variant="outline" size="sm">
-              {t('sharingDialog.downloadVCard')}
-            </Button>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={downloadVCard} variant="outline" size="sm">
+                {t('sharingDialog.downloadVCard')}
+              </Button>
+              <Button onClick={copyVCardToClipboard} size="sm">
+                Copy vCard
+              </Button>
+            </div>
           </Card>
 
           {/* Sharing Options */}
@@ -299,6 +323,7 @@ ${contactData.name}`;
               onClick={handleShareSMS}
               className="w-full justify-start"
               variant="outline"
+              disabled={!isMobile}
             >
               <Share2 className="mr-2 h-4 w-4" />
               {t('sharingDialog.shareSMS')}
@@ -308,15 +333,26 @@ ${contactData.name}`;
               onClick={handleWebShare}
               className="w-full justify-start"
               variant="outline"
+              disabled={!supportsWebShare}
             >
               <Share2 className="mr-2 h-4 w-4" />
               {t('sharingDialog.shareSystem')} / AirDrop
             </Button>
 
             <Button 
+              onClick={copyContactToClipboard}
+              className="w-full justify-start"
+              variant="outline"
+            >
+              <Share2 className="mr-2 h-4 w-4" />
+              Copy as Text
+            </Button>
+
+            <Button 
               onClick={handleBluetooth}
               className="w-full justify-start"
               variant="outline"
+              disabled={!supportsBluetooth}
             >
               <Bluetooth className="mr-2 h-4 w-4" />
               {t('sharingDialog.shareBluetooth')}
@@ -329,6 +365,7 @@ ${contactData.name}`;
               onClick={handleNFC}
               className="w-full justify-start"
               variant="outline"
+              disabled={!supportsNFC}
             >
               <Nfc className="mr-2 h-4 w-4" />
               {t('sharingDialog.shareNFC')}
