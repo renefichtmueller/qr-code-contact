@@ -26,6 +26,10 @@ export interface ContactData {
   customColor?: string;
   tags?: string[];
   notes?: string;
+  linkedin?: string;
+  facebook?: string;
+  whatsapp?: string;
+  twitter?: string;
   colors?: {
     header?: string;
     icons?: string;

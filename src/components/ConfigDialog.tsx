@@ -252,6 +252,52 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
             </div>
           </Card>
 
+          {/* Social Media */}
+          <Card className="p-4">
+            <h3 className="font-semibold mb-4">Social Media</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Input
+                  id="linkedin"
+                  value={formData.linkedin || ''}
+                  onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                  placeholder="username oder URL"
+                />
+              </div>
+              <div>
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
+                  value={formData.facebook || ''}
+                  onChange={(e) => handleInputChange('facebook', e.target.value)}
+                  placeholder="username oder URL"
+                />
+              </div>
+              <div>
+                <Label htmlFor="whatsapp">WhatsApp</Label>
+                <Input
+                  id="whatsapp"
+                  value={formData.whatsapp || ''}
+                  onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                  placeholder="+49123456789"
+                />
+              </div>
+              <div>
+                <Label htmlFor="twitter">Twitter</Label>
+                <Input
+                  id="twitter"
+                  value={formData.twitter || ''}
+                  onChange={(e) => handleInputChange('twitter', e.target.value)}
+                  placeholder="@username oder URL"
+                />
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Geben Sie entweder den Benutzernamen oder die vollständige URL ein
+            </p>
+          </Card>
+
           {/* Image Uploads */}
           <Card className="p-4">
             <h3 className="font-semibold mb-4">{t('profile.images')}</h3>

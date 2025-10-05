@@ -29,7 +29,7 @@ export const SharingOptions = ({ open, onOpenChange, contactData }: SharingOptio
   const supportsWebShareEffective = supportsWebShare && !inIframe;
 
   const generateVCard = () => {
-    return `BEGIN:VCARD
+    let vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${contactData.name}
 ORG:${contactData.company}
@@ -37,8 +37,37 @@ TITLE:${contactData.title}
 EMAIL:${contactData.email}
 TEL:${contactData.phone}
 URL:${contactData.website}
-ADR:;;${contactData.address};;;;
-END:VCARD`;
+ADR:;;${contactData.address};;;;`;
+
+    // Add social media links if present
+    if (contactData.linkedin) {
+      const linkedinUrl = contactData.linkedin.startsWith('http') 
+        ? contactData.linkedin 
+        : `https://linkedin.com/in/${contactData.linkedin}`;
+      vcard += `\nX-SOCIALPROFILE;TYPE=linkedin:${linkedinUrl}`;
+    }
+    
+    if (contactData.facebook) {
+      const facebookUrl = contactData.facebook.startsWith('http') 
+        ? contactData.facebook 
+        : `https://facebook.com/${contactData.facebook}`;
+      vcard += `\nX-SOCIALPROFILE;TYPE=facebook:${facebookUrl}`;
+    }
+    
+    if (contactData.whatsapp) {
+      const whatsappUrl = `https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, '')}`;
+      vcard += `\nX-SOCIALPROFILE;TYPE=whatsapp:${whatsappUrl}`;
+    }
+    
+    if (contactData.twitter) {
+      const twitterUrl = contactData.twitter.startsWith('http') 
+        ? contactData.twitter 
+        : `https://twitter.com/${contactData.twitter.replace('@', '')}`;
+      vcard += `\nX-SOCIALPROFILE;TYPE=twitter:${twitterUrl}`;
+    }
+
+    vcard += '\nEND:VCARD';
+    return vcard;
   };
 
   useEffect(() => {

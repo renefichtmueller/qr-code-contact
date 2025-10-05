@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, Globe, MapPin, Building2, Tag, StickyNote } from 'lucide-react';
+import { Mail, Phone, Globe, MapPin, Building2, Tag, StickyNote, Linkedin, Facebook, Twitter, MessageCircle } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
 
 interface ProfileCardProps {
@@ -155,6 +155,58 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
             </div>
           )}
         </div>
+
+        {/* Social Media Links */}
+        {(contactData.linkedin || contactData.facebook || contactData.whatsapp || contactData.twitter) && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <div className="flex flex-wrap gap-2">
+              {contactData.linkedin && (
+                <a
+                  href={contactData.linkedin.startsWith('http') ? contactData.linkedin : `https://linkedin.com/in/${contactData.linkedin}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0077B5] text-white hover:opacity-90 transition-opacity text-sm"
+                >
+                  <Linkedin className="h-4 w-4" />
+                  LinkedIn
+                </a>
+              )}
+              {contactData.facebook && (
+                <a
+                  href={contactData.facebook.startsWith('http') ? contactData.facebook : `https://facebook.com/${contactData.facebook}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1877F2] text-white hover:opacity-90 transition-opacity text-sm"
+                >
+                  <Facebook className="h-4 w-4" />
+                  Facebook
+                </a>
+              )}
+              {contactData.whatsapp && (
+                <a
+                  href={`https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25D366] text-white hover:opacity-90 transition-opacity text-sm"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp
+                </a>
+              )}
+              {contactData.twitter && (
+                <a
+                  href={contactData.twitter.startsWith('http') ? contactData.twitter : `https://twitter.com/${contactData.twitter.replace('@', '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1DA1F2] text-white hover:opacity-90 transition-opacity text-sm"
+                >
+                  <Twitter className="h-4 w-4" />
+                  Twitter
+                </a>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Tags Section */}
         {contactData.tags && contactData.tags.length > 0 && (
