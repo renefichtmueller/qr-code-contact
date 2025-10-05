@@ -7,11 +7,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { X, Tag, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface ContactMetadataDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (tags: string[], notes: string) => void;
+  firstName: string;
+  lastName: string;
 }
 
 const SUGGESTED_TAGS = [
@@ -27,7 +31,7 @@ const SUGGESTED_TAGS = [
   'Investor'
 ];
 
-export const ContactMetadataDialog = ({ open, onOpenChange, onSave }: ContactMetadataDialogProps) => {
+export const ContactMetadataDialog = ({ open, onOpenChange, onSave, firstName, lastName }: ContactMetadataDialogProps) => {
   const { t } = useTranslation();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
@@ -45,13 +49,32 @@ export const ContactMetadataDialog = ({ open, onOpenChange, onSave }: ContactMet
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     onSave(tags, notes);
     // Reset form
     setTags([]);
     setNotes('');
     setTagInput('');
     onOpenChange(false);
+
+    // Send notification email
+    try {
+      const { error } = await supabase.functions.invoke('send-contact-notification', {
+        body: { 
+          firstName,
+          lastName
+        }
+      });
+
+      if (error) {
+        console.error('Error sending notification:', error);
+        toast.error('Fehler beim Senden der Benachrichtigung');
+      } else {
+        console.log('Notification sent successfully');
+      }
+    } catch (error) {
+      console.error('Error invoking function:', error);
+    }
   };
 
   const handleCancel = () => {

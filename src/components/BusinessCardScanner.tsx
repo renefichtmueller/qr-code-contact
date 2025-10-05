@@ -93,6 +93,15 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
     }
   };
 
+  // Extract first and last name from scanned data
+  const getNameParts = () => {
+    if (!scannedData?.name) return { firstName: "", lastName: "" };
+    const nameParts = scannedData.name.trim().split(" ");
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.slice(1).join(" ") || "";
+    return { firstName, lastName };
+  };
+
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast({
@@ -220,11 +229,13 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
           )}
         </div>
 
-        <ContactMetadataDialog
-          open={showMetadataDialog}
-          onOpenChange={setShowMetadataDialog}
-          onSave={handleMetadataSave}
-        />
+      <ContactMetadataDialog
+        open={showMetadataDialog}
+        onOpenChange={setShowMetadataDialog}
+        onSave={handleMetadataSave}
+        firstName={getNameParts().firstName}
+        lastName={getNameParts().lastName}
+      />
       </DialogContent>
     </Dialog>
   );
