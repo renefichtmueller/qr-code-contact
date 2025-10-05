@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.963af7e24658436e970717b116a733d6',
+  appId: 'com.lovable.qrcodecontact',
   appName: 'qr-code-contact',
   webDir: 'dist',
   server: {
