@@ -401,20 +401,18 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                     value={formData.colors?.header || formData.customColor || ''}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value === '' || validateHexColor(value)) {
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          colors: { ...prev.colors, header: value },
-                          customColor: value 
-                        }));
-                      }
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        colors: { ...prev.colors, header: value },
+                        customColor: value 
+                      }));
                     }}
                     placeholder="#a855f7"
                     className="flex-1"
                   />
                   <div 
                     className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
-                    style={{ backgroundColor: formData.colors?.header || formData.customColor || '#a855f7' }}
+                    style={{ backgroundColor: validateHexColor(formData.colors?.header || formData.customColor || '') ? (formData.colors?.header || formData.customColor) : '#a855f7' }}
                   />
                 </div>
               </div>
@@ -428,19 +426,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                     value={formData.colors?.icons || ''}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value === '' || validateHexColor(value)) {
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          colors: { ...prev.colors, icons: value }
-                        }));
-                      }
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        colors: { ...prev.colors, icons: value }
+                      }));
                     }}
                     placeholder="#a855f7"
                     className="flex-1"
                   />
                   <div 
                     className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
-                    style={{ backgroundColor: formData.colors?.icons || '#a855f7' }}
+                    style={{ backgroundColor: validateHexColor(formData.colors?.icons || '') ? formData.colors?.icons : '#a855f7' }}
                   />
                 </div>
               </div>
@@ -454,19 +450,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                     value={formData.colors?.text || ''}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value === '' || validateHexColor(value)) {
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          colors: { ...prev.colors, text: value }
-                        }));
-                      }
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        colors: { ...prev.colors, text: value }
+                      }));
                     }}
                     placeholder="#000000"
                     className="flex-1"
                   />
                   <div 
                     className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
-                    style={{ backgroundColor: formData.colors?.text || '#000000' }}
+                    style={{ backgroundColor: validateHexColor(formData.colors?.text || '') ? formData.colors?.text : '#000000' }}
                   />
                 </div>
               </div>
@@ -480,19 +474,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                     value={formData.colors?.badges || ''}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value === '' || validateHexColor(value)) {
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          colors: { ...prev.colors, badges: value }
-                        }));
-                      }
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        colors: { ...prev.colors, badges: value }
+                      }));
                     }}
                     placeholder="#a855f7"
                     className="flex-1"
                   />
                   <div 
                     className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
-                    style={{ backgroundColor: formData.colors?.badges || '#a855f7' }}
+                    style={{ backgroundColor: validateHexColor(formData.colors?.badges || '') ? formData.colors?.badges : '#a855f7' }}
                   />
                 </div>
               </div>
@@ -506,19 +498,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                     value={formData.colors?.hover || ''}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value === '' || validateHexColor(value)) {
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          colors: { ...prev.colors, hover: value }
-                        }));
-                      }
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        colors: { ...prev.colors, hover: value }
+                      }));
                     }}
                     placeholder="#a855f7"
                     className="flex-1"
                   />
                   <div 
                     className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
-                    style={{ backgroundColor: formData.colors?.hover || '#a855f7' }}
+                    style={{ backgroundColor: validateHexColor(formData.colors?.hover || '') ? formData.colors?.hover : '#a855f7' }}
                   />
                 </div>
               </div>
