@@ -147,21 +147,18 @@ ${contactData.name}`;
     if ('NDEFReader' in window) {
       try {
         const vCard = generateVCard();
-        // @ts-ignore - NDEFWriter is experimental
-        const ndef = new NDEFWriter();
-        await ndef.write({
-          records: [{ recordType: "text", data: vCard }]
-        });
-        
+        // @ts-ignore - Web NFC is experimental
+        const ndef = new (window as any).NDEFReader();
+        await ndef.write(vCard);
         toast({
           title: 'NFC bereit',
-          description: 'Halten Sie Ihr Gerät an ein anderes NFC-fähiges Gerät'
+          description: 'VCard wurde an NFC übergeben. Jetzt an ein NFC-Gerät halten.'
         });
       } catch (error) {
         console.error('NFC Error:', error);
         toast({
           title: 'NFC-Fehler',
-          description: 'NFC konnte nicht aktiviert werden. Bitte prüfen Sie die Berechtigungen.',
+          description: 'NFC konnte nicht verwendet werden. Bitte Berechtigungen prüfen.',
           variant: 'destructive'
         });
       }
@@ -194,6 +191,24 @@ ${contactData.name}`;
       toast({
         title: t('toasts.bluetoothNotAvailable'),
         description: t('toasts.bluetoothNotAvailableDesc'),
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const copyContactToClipboard = async () => {
+    const text = `${contactData.name}\n${contactData.title} - ${contactData.company}\n${contactData.email}\n${contactData.phone}\n${contactData.website}\n${contactData.address}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: 'Kopiert',
+        description: 'Kontaktdaten wurden in die Zwischenablage kopiert.'
+      });
+    } catch (error) {
+      console.error('Clipboard error:', error);
+      toast({
+        title: 'Fehler',
+        description: 'Kopieren in die Zwischenablage nicht möglich.',
         variant: 'destructive'
       });
     }
