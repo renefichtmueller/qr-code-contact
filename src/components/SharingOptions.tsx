@@ -116,10 +116,35 @@ ${contactData.name}`;
     if (navigator.share) {
       try {
         const vCard = generateVCard();
+        
+        // Try to share vCard file (supports AirDrop on iOS)
+        if (navigator.canShare) {
+          const file = new File([vCard], `${contactData.name.replace(/\s+/g, '_')}.vcf`, {
+            type: 'text/vcard',
+          });
+          
+          const shareData = {
+            title: `${t('contactForm.title')}: ${contactData.name}`,
+            text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}`,
+            files: [file]
+          };
+          
+          if (navigator.canShare(shareData)) {
+            await navigator.share(shareData);
+            toast({
+              title: t('toasts.shared'),
+              description: 'Kontakt wurde geteilt (AirDrop verfügbar auf iOS)'
+            });
+            return;
+          }
+        }
+        
+        // Fallback: share text only
         await navigator.share({
           title: `${t('contactForm.title')}: ${contactData.name}`,
           text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}\n${t('profile.email')}: ${contactData.email}\n${t('profile.phone')}: ${contactData.phone}`,
         });
+        
         toast({
           title: t('toasts.shared'),
           description: t('toasts.sharedDesc')
@@ -285,7 +310,7 @@ ${contactData.name}`;
               variant="outline"
             >
               <Share2 className="mr-2 h-4 w-4" />
-              {t('sharingDialog.shareSystem')}
+              {t('sharingDialog.shareSystem')} / AirDrop
             </Button>
 
             <Button 
