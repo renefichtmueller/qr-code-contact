@@ -1,0 +1,130 @@
+{
+  "app": {
+    "title": "Compartir Contacto",
+    "subtitle": "Comparte tu información de contacto de manera simple y profesional",
+    "badge": "Comunidad de Código Abierto"
+  },
+  "actions": {
+    "title": "Acciones",
+    "shareContact": "Compartir contacto",
+    "editProfile": "Editar perfil",
+    "requestContact": "Solicitar información de contacto",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "upload": "Subir",
+    "change": "Cambiar",
+    "remove": "Eliminar",
+    "sending": "Enviando...",
+    "send": "Enviar contacto"
+  },
+  "sharing": {
+    "title": "Métodos de Compartir Disponibles",
+    "methods": {
+      "qrCode": "Código QR",
+      "email": "Correo Electrónico",
+      "sms": "SMS",
+      "bluetooth": "Bluetooth",
+      "nfc": "NFC"
+    }
+  },
+  "profile": {
+    "title": "Editar Perfil",
+    "personalData": "Información Personal",
+    "name": "Nombre",
+    "title": "Cargo",
+    "company": "Empresa",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "website": "Sitio Web",
+    "address": "Dirección",
+    "images": "Imágenes",
+    "profileImage": "Foto de Perfil",
+    "companyLogo": "Logo de la Empresa",
+    "templateSelection": "Elegir Plantilla de Diseño",
+    "customColor": "Color Personalizado",
+    "hexColor": "Color Hexadecimal",
+    "placeholders": {
+      "name": "Tu nombre completo",
+      "title": "Tu cargo",
+      "company": "Nombre de la empresa",
+      "email": "tu.correo@ejemplo.com",
+      "phone": "+34 123 456789",
+      "website": "https://tu-sitio-web.com",
+      "address": "Calle, CP Ciudad",
+      "hexColor": "#a855f7"
+    },
+    "supportedFormats": "Formatos soportados: JPG, PNG (máx. 5MB)",
+    "colorDescription": "Ingresa un color hexadecimal (ej. #a855f7) para personalizar el diseño"
+  },
+  "contactForm": {
+    "title": "Compartir Información de Contacto",
+    "description": "Completa el formulario para compartir tu información de contacto. Se enviará un correo electrónico con tus datos a <strong>{{email}}</strong>.",
+    "message": "Mensaje (opcional)",
+    "placeholders": {
+      "message": "Información adicional o mensaje..."
+    }
+  },
+  "sharingDialog": {
+    "title": "Compartir Contacto",
+    "qrCodeTitle": "Código QR",
+    "qrCodeDescription": "Escanea el código QR para obtener la información de contacto",
+    "downloadVCard": "Descargar vCard",
+    "shareEmail": "Compartir por Correo",
+    "shareSMS": "Compartir por SMS",
+    "shareSystem": "Usar Compartir del Sistema",
+    "shareBluetooth": "Vía Bluetooth",
+    "shareNFC": "Vía NFC",
+    "beta": "Beta"
+  },
+  "templates": {
+    "modern": "Moderno",
+    "minimal": "Minimalista",
+    "elegant": "Elegante",
+    "bold": "Audaz"
+  },
+  "toasts": {
+    "profileSaved": "Perfil guardado",
+    "profileSavedDesc": "Tu información de contacto ha sido actualizada exitosamente.",
+    "imageUploaded": "Imagen subida",
+    "imageUploadedDesc": "{{type}} ha sido subida exitosamente.",
+    "imageRemoved": "Imagen eliminada",
+    "imageRemovedDesc": "{{type}} ha sido eliminada.",
+    "invalidEmail": "Correo electrónico inválido",
+    "invalidEmailDesc": "Por favor ingresa una dirección de correo electrónico válida.",
+    "invalidWebsite": "Sitio web inválido",
+    "invalidWebsiteDesc": "El sitio web debe comenzar con https:// y ser válido.",
+    "invalidFile": "Archivo inválido",
+    "invalidFileDesc": "El archivo no pudo ser validado.",
+    "requiredFields": "Entrada inválida",
+    "requiredFieldsDesc": "Nombre y correo electrónico son campos obligatorios.",
+    "inputTooLong": "Entrada demasiado larga",
+    "inputTooLongDesc": "Por favor acorta tu entrada.",
+    "emailOpened": "Abriendo correo electrónico",
+    "emailOpenedDesc": "Tu información de contacto será enviada por correo electrónico.",
+    "sendError": "Error al enviar",
+    "sendErrorDesc": "El correo electrónico no pudo ser abierto.",
+    "emailClientOpened": "Correo electrónico abierto",
+    "emailClientOpenedDesc": "El cliente de correo ha sido abierto.",
+    "smsOpened": "SMS abierto",
+    "smsOpenedDesc": "La aplicación de SMS ha sido abierta.",
+    "shared": "Compartido exitosamente",
+    "sharedDesc": "El contacto ha sido compartido.",
+    "webShareNotAvailable": "Web Share no disponible",
+    "webShareNotAvailableDesc": "Tu navegador no soporta la API de Web Share.",
+    "nfcPreparing": "Preparando NFC",
+    "nfcPreparingDesc": "Acerca tu dispositivo a un dispositivo con NFC.",
+    "nfcNotAvailable": "NFC no disponible",
+    "nfcNotAvailableDesc": "Tu dispositivo no soporta NFC.",
+    "bluetoothPreparing": "Preparando Bluetooth",
+    "bluetoothPreparingDesc": "La transferencia por Bluetooth se está configurando.",
+    "bluetoothNotAvailable": "Bluetooth no disponible",
+    "bluetoothNotAvailableDesc": "Tu navegador no soporta Web Bluetooth.",
+    "vCardDownloaded": "vCard descargada",
+    "vCardDownloadedDesc": "El archivo de contacto ha sido descargado."
+  },
+  "notFound": {
+    "title": "404",
+    "message": "¡Ups! Página no encontrada",
+    "backHome": "Volver al Inicio"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "app": {
+    "title": "Share Contact",
+    "subtitle": "Share your contact information simply and professionally",
+    "badge": "Open Source Community"
+  },
+  "actions": {
+    "title": "Actions",
+    "shareContact": "Share contact",
+    "editProfile": "Edit profile",
+    "requestContact": "Request contact information",
+    "save": "Save",
+    "cancel": "Cancel",
+    "upload": "Upload",
+    "change": "Change",
+    "remove": "Remove",
+    "sending": "Sending...",
+    "send": "Send contact"
+  },
+  "sharing": {
+    "title": "Available Sharing Methods",
+    "methods": {
+      "qrCode": "QR Code",
+      "email": "Email",
+      "sms": "SMS",
+      "bluetooth": "Bluetooth",
+      "nfc": "NFC"
+    }
+  },
+  "profile": {
+    "title": "Edit Profile",
+    "personalData": "Personal Information",
+    "name": "Name",
+    "title": "Position",
+    "company": "Company",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "address": "Address",
+    "images": "Images",
+    "profileImage": "Profile Picture",
+    "companyLogo": "Company Logo",
+    "templateSelection": "Choose Design Template",
+    "customColor": "Custom Color",
+    "hexColor": "Hex Color",
+    "placeholders": {
+      "name": "Your full name",
+      "title": "Your job title",
+      "company": "Company name",
+      "email": "your.email@example.com",
+      "phone": "+1 234 567890",
+      "website": "https://your-website.com",
+      "address": "Street, ZIP City",
+      "hexColor": "#a855f7"
+    },
+    "supportedFormats": "Supported formats: JPG, PNG (max. 5MB)",
+    "colorDescription": "Enter a hex color (e.g. #a855f7) to personalize the design"
+  },
+  "contactForm": {
+    "title": "Share Contact Information",
+    "description": "Fill out the form to share your contact information. An email with your details will be sent to <strong>{{email}}</strong>.",
+    "message": "Message (optional)",
+    "placeholders": {
+      "message": "Additional information or message..."
+    }
+  },
+  "sharingDialog": {
+    "title": "Share Contact",
+    "qrCodeTitle": "QR Code",
+    "qrCodeDescription": "Scan the QR code to get the contact information",
+    "downloadVCard": "Download vCard",
+    "shareEmail": "Share via Email",
+    "shareSMS": "Share via SMS",
+    "shareSystem": "Use System Share",
+    "shareBluetooth": "Via Bluetooth",
+    "shareNFC": "Via NFC",
+    "beta": "Beta"
+  },
+  "templates": {
+    "modern": "Modern",
+    "minimal": "Minimal",
+    "elegant": "Elegant",
+    "bold": "Bold"
+  },
+  "toasts": {
+    "profileSaved": "Profile saved",
+    "profileSavedDesc": "Your contact information has been successfully updated.",
+    "imageUploaded": "Image uploaded",
+    "imageUploadedDesc": "{{type}} has been successfully uploaded.",
+    "imageRemoved": "Image removed",
+    "imageRemovedDesc": "{{type}} has been removed.",
+    "invalidEmail": "Invalid email",
+    "invalidEmailDesc": "Please enter a valid email address.",
+    "invalidWebsite": "Invalid website",
+    "invalidWebsiteDesc": "Website must start with https:// and be valid.",
+    "invalidFile": "Invalid file",
+    "invalidFileDesc": "The file could not be validated.",
+    "requiredFields": "Invalid input",
+    "requiredFieldsDesc": "Name and email are required fields.",
+    "inputTooLong": "Input too long",
+    "inputTooLongDesc": "Please shorten your input.",
+    "emailOpened": "Opening email",
+    "emailOpenedDesc": "Your contact information will be sent via email.",
+    "sendError": "Send error",
+    "sendErrorDesc": "The email could not be opened.",
+    "emailClientOpened": "Email opened",
+    "emailClientOpenedDesc": "Email client has been opened.",
+    "smsOpened": "SMS opened",
+    "smsOpenedDesc": "SMS app has been opened.",
+    "shared": "Successfully shared",
+    "sharedDesc": "Contact has been shared.",
+    "webShareNotAvailable": "Web Share not available",
+    "webShareNotAvailableDesc": "Your browser does not support the Web Share API.",
+    "nfcPreparing": "Preparing NFC",
+    "nfcPreparingDesc": "Hold your device to an NFC-enabled device.",
+    "nfcNotAvailable": "NFC not available",
+    "nfcNotAvailableDesc": "Your device does not support NFC.",
+    "bluetoothPreparing": "Preparing Bluetooth",
+    "bluetoothPreparingDesc": "Bluetooth transfer is being set up.",
+    "bluetoothNotAvailable": "Bluetooth not available",
+    "bluetoothNotAvailableDesc": "Your browser does not support Web Bluetooth.",
+    "vCardDownloaded": "vCard downloaded",
+    "vCardDownloadedDesc": "Contact file has been downloaded."
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oops! Page not found",
+    "backHome": "Return to Home"
+  }
+}

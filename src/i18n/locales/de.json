@@ -1,0 +1,130 @@
+{
+  "app": {
+    "title": "Kontakt Teilen",
+    "subtitle": "Teilen Sie Ihre Kontaktdaten einfach und professionell",
+    "badge": "Open Source Community"
+  },
+  "actions": {
+    "title": "Aktionen",
+    "shareContact": "Kontakt teilen",
+    "editProfile": "Profil bearbeiten",
+    "requestContact": "Gegenkontakt anfragen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "upload": "Hochladen",
+    "change": "Ändern",
+    "remove": "Entfernen",
+    "sending": "Wird gesendet...",
+    "send": "Kontakt senden"
+  },
+  "sharing": {
+    "title": "Verfügbare Sharing-Methoden",
+    "methods": {
+      "qrCode": "QR Code",
+      "email": "E-Mail",
+      "sms": "SMS",
+      "bluetooth": "Bluetooth",
+      "nfc": "NFC"
+    }
+  },
+  "profile": {
+    "title": "Profil bearbeiten",
+    "personalData": "Persönliche Daten",
+    "name": "Name",
+    "title": "Position",
+    "company": "Firma",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "website": "Website",
+    "address": "Adresse",
+    "images": "Bilder",
+    "profileImage": "Profilbild",
+    "companyLogo": "Firmenlogo",
+    "templateSelection": "Design-Vorlage wählen",
+    "customColor": "Benutzerdefinierte Farbe",
+    "hexColor": "Hex-Farbe",
+    "placeholders": {
+      "name": "Ihr vollständiger Name",
+      "title": "Ihre Berufsbezeichnung",
+      "company": "Firmenname",
+      "email": "ihre.email@beispiel.de",
+      "phone": "+49 123 456789",
+      "website": "https://ihre-website.de",
+      "address": "Straße, PLZ Ort",
+      "hexColor": "#a855f7"
+    },
+    "supportedFormats": "Unterstützte Formate: JPG, PNG (max. 5MB)",
+    "colorDescription": "Geben Sie eine Hex-Farbe ein (z.B. #a855f7) um das Design zu personalisieren"
+  },
+  "contactForm": {
+    "title": "Kontaktdaten teilen",
+    "description": "Füllen Sie das Formular aus, um Ihre Kontaktdaten zu teilen. Eine E-Mail mit Ihren Daten wird an <strong>{{email}}</strong> gesendet.",
+    "message": "Nachricht (optional)",
+    "placeholders": {
+      "message": "Zusätzliche Informationen oder Nachricht..."
+    }
+  },
+  "sharingDialog": {
+    "title": "Kontakt teilen",
+    "qrCodeTitle": "QR Code",
+    "qrCodeDescription": "Scannen Sie den QR-Code um die Kontaktdaten zu erhalten",
+    "downloadVCard": "vCard herunterladen",
+    "shareEmail": "Per E-Mail teilen",
+    "shareSMS": "Per SMS teilen",
+    "shareSystem": "System-Share nutzen",
+    "shareBluetooth": "Via Bluetooth",
+    "shareNFC": "Via NFC",
+    "beta": "Beta"
+  },
+  "templates": {
+    "modern": "Modern",
+    "minimal": "Minimal",
+    "elegant": "Elegant",
+    "bold": "Bold"
+  },
+  "toasts": {
+    "profileSaved": "Profil gespeichert",
+    "profileSavedDesc": "Ihre Kontaktdaten wurden erfolgreich aktualisiert.",
+    "imageUploaded": "Bild hochgeladen",
+    "imageUploadedDesc": "{{type}} wurde erfolgreich hochgeladen.",
+    "imageRemoved": "Bild entfernt",
+    "imageRemovedDesc": "{{type}} wurde entfernt.",
+    "invalidEmail": "Ungültige E-Mail",
+    "invalidEmailDesc": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "invalidWebsite": "Ungültige Website",
+    "invalidWebsiteDesc": "Website muss mit https:// beginnen und gültig sein.",
+    "invalidFile": "Ungültige Datei",
+    "invalidFileDesc": "Die Datei konnte nicht validiert werden.",
+    "requiredFields": "Fehlerhafte Eingabe",
+    "requiredFieldsDesc": "Name und E-Mail sind Pflichtfelder.",
+    "inputTooLong": "Eingabe zu lang",
+    "inputTooLongDesc": "Bitte kürzen Sie Ihre Eingaben.",
+    "emailOpened": "E-Mail wird geöffnet",
+    "emailOpenedDesc": "Ihre Kontaktdaten werden per E-Mail versendet.",
+    "sendError": "Fehler beim Senden",
+    "sendErrorDesc": "Die E-Mail konnte nicht geöffnet werden.",
+    "emailClientOpened": "E-Mail geöffnet",
+    "emailClientOpenedDesc": "E-Mail-Client wurde geöffnet.",
+    "smsOpened": "SMS geöffnet",
+    "smsOpenedDesc": "SMS-App wurde geöffnet.",
+    "shared": "Erfolgreich geteilt",
+    "sharedDesc": "Kontakt wurde geteilt.",
+    "webShareNotAvailable": "Web Share nicht verfügbar",
+    "webShareNotAvailableDesc": "Ihr Browser unterstützt das Web Share API nicht.",
+    "nfcPreparing": "NFC wird vorbereitet",
+    "nfcPreparingDesc": "Halten Sie Ihr Gerät an ein NFC-fähiges Gerät.",
+    "nfcNotAvailable": "NFC nicht verfügbar",
+    "nfcNotAvailableDesc": "Ihr Gerät unterstützt kein NFC.",
+    "bluetoothPreparing": "Bluetooth wird vorbereitet",
+    "bluetoothPreparingDesc": "Bluetooth-Übertragung wird eingerichtet.",
+    "bluetoothNotAvailable": "Bluetooth nicht verfügbar",
+    "bluetoothNotAvailableDesc": "Ihr Browser unterstützt Web Bluetooth nicht.",
+    "vCardDownloaded": "vCard heruntergeladen",
+    "vCardDownloadedDesc": "Kontaktdatei wurde heruntergeladen."
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Hoppla! Seite nicht gefunden",
+    "backHome": "Zurück zur Startseite"
+  }
+}

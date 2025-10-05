@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { Upload, X, Camera, Building2 } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
+import { useTranslation } from 'react-i18next';
 import { 
   sanitizeString, 
   validateEmail, 
@@ -24,15 +25,16 @@ interface ConfigDialogProps {
   onSave: (data: ContactData) => void;
 }
 
-const templates = [
-  { id: 'modern', name: 'Modern', color: '#a855f7' },
-  { id: 'minimal', name: 'Minimal', color: '#64748b' },
-  { id: 'elegant', name: 'Elegant', color: '#059669' },
-  { id: 'bold', name: 'Bold', color: '#ea580c' }
-];
-
 export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: ConfigDialogProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<ContactData>(contactData);
+
+  const templates = [
+    { id: 'modern', name: t('templates.modern'), color: '#a855f7' },
+    { id: 'minimal', name: t('templates.minimal'), color: '#64748b' },
+    { id: 'elegant', name: t('templates.elegant'), color: '#059669' },
+    { id: 'bold', name: t('templates.bold'), color: '#ea580c' }
+  ];
 
   const handleInputChange = (field: keyof ContactData, value: string) => {
     let sanitizedValue = value;
@@ -55,11 +57,10 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
         sanitizedValue = sanitizeString(value, 2000);
         break;
       case 'customColor':
-        // Only update if valid hex color or empty
         if (value === '' || validateHexColor(value)) {
           sanitizedValue = value;
         } else {
-          return; // Don't update if invalid
+          return;
         }
         break;
       default:
@@ -70,21 +71,19 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
   };
 
   const handleSave = () => {
-    // Basic validation before saving
     if (!formData.name || !formData.email) {
       toast({
-        title: "Required Fields Missing",
-        description: "Name and email are required fields.",
+        title: t('toasts.requiredFields'),
+        description: t('toasts.requiredFieldsDesc'),
         variant: "destructive"
       });
       return;
     }
     
-    // Additional client-side validation
     if (formData.email && !validateEmail(formData.email)) {
       toast({
-        title: "Ungültige E-Mail",
-        description: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        title: t('toasts.invalidEmail'),
+        description: t('toasts.invalidEmailDesc'),
         variant: "destructive"
       });
       return;
@@ -92,8 +91,8 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
     
     if (formData.website && formData.website !== '' && !validateURL(formData.website)) {
       toast({
-        title: "Ungültige Website",
-        description: "Website muss mit https:// beginnen und gültig sein.",
+        title: t('toasts.invalidWebsite'),
+        description: t('toasts.invalidWebsiteDesc'),
         variant: "destructive"
       });
       return;
@@ -102,8 +101,8 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
     onSave(formData);
     onOpenChange(false);
     toast({
-      title: "Profil gespeichert",
-      description: "Ihre Kontaktdaten wurden erfolgreich aktualisiert."
+      title: t('toasts.profileSaved'),
+      description: t('toasts.profileSavedDesc')
     });
   };
 
@@ -112,19 +111,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
   };
 
   const handleColorChange = (color: string) => {
-    // Validate hex color using security utility
     if (color === '' || validateHexColor(color)) {
       setFormData(prev => ({ ...prev, customColor: color }));
     }
   };
 
   const handleImageUpload = (field: 'profileImage' | 'companyLogo', file: File) => {
-    // Enhanced security validation
     const validation = validateImageFile(file);
     if (!validation.isValid) {
       toast({
-        title: "Ungültige Datei",
-        description: validation.error || "Die Datei konnte nicht validiert werden.",
+        title: t('toasts.invalidFile'),
+        description: validation.error || t('toasts.invalidFileDesc'),
         variant: "destructive"
       });
       return;
@@ -135,8 +132,8 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
       const result = e.target?.result as string;
       setFormData(prev => ({ ...prev, [field]: result }));
       toast({
-        title: "Bild hochgeladen",
-        description: `${field === 'profileImage' ? 'Profilbild' : 'Firmenlogo'} wurde erfolgreich hochgeladen.`
+        title: t('toasts.imageUploaded'),
+        description: t('toasts.imageUploadedDesc', { type: field === 'profileImage' ? t('profile.profileImage') : t('profile.companyLogo') })
       });
     };
     reader.readAsDataURL(file);
@@ -145,8 +142,8 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
   const removeImage = (field: 'profileImage' | 'companyLogo') => {
     setFormData(prev => ({ ...prev, [field]: undefined }));
     toast({
-      title: "Bild entfernt",
-      description: `${field === 'profileImage' ? 'Profilbild' : 'Firmenlogo'} wurde entfernt.`
+      title: t('toasts.imageRemoved'),
+      description: t('toasts.imageRemovedDesc', { type: field === 'profileImage' ? t('profile.profileImage') : t('profile.companyLogo') })
     });
   };
 
@@ -154,98 +151,98 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Profil bearbeiten</DialogTitle>
+          <DialogTitle>{t('profile.title')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Basic Information */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4">Persönliche Daten</h3>
+            <h3 className="font-semibold mb-4">{t('profile.personalData')}</h3>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name">{t('profile.name')} *</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Ihr vollständiger Name"
+                  placeholder={t('profile.placeholders.name')}
                 />
               </div>
               <div>
-                <Label htmlFor="title">Position</Label>
+                <Label htmlFor="title">{t('profile.title')}</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  placeholder="Ihre Berufsbezeichnung"
+                  placeholder={t('profile.placeholders.title')}
                 />
               </div>
               <div>
-                <Label htmlFor="company">Firma</Label>
+                <Label htmlFor="company">{t('profile.company')}</Label>
                 <Input
                   id="company"
                   value={formData.company}
                   onChange={(e) => handleInputChange('company', e.target.value)}
-                  placeholder="Firmenname"
+                  placeholder={t('profile.placeholders.company')}
                 />
               </div>
               <div>
-                <Label htmlFor="email">E-Mail *</Label>
+                <Label htmlFor="email">{t('profile.email')} *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="ihre.email@beispiel.de"
+                  placeholder={t('profile.placeholders.email')}
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Telefon</Label>
+                <Label htmlFor="phone">{t('profile.phone')}</Label>
                 <Input
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="+49 123 456789"
+                  placeholder={t('profile.placeholders.phone')}
                 />
               </div>
               <div>
-                <Label htmlFor="website">Website</Label>
+                <Label htmlFor="website">{t('profile.website')}</Label>
                 <Input
                   id="website"
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
-                  placeholder="https://ihre-website.de"
+                  placeholder={t('profile.placeholders.website')}
                 />
               </div>
             </div>
             <div className="mt-4">
-              <Label htmlFor="address">Adresse</Label>
+              <Label htmlFor="address">{t('profile.address')}</Label>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
-                placeholder="Straße, PLZ Ort"
+                placeholder={t('profile.placeholders.address')}
               />
             </div>
           </Card>
 
           {/* Image Uploads */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4">Bilder</h3>
+            <h3 className="font-semibold mb-4">{t('profile.images')}</h3>
             
             <div className="grid gap-6 md:grid-cols-2">
               {/* Profile Image */}
               <div>
                 <Label className="flex items-center gap-2 mb-3">
                   <Camera className="h-4 w-4" />
-                  Profilbild
+                  {t('profile.profileImage')}
                 </Label>
                 <div className="space-y-3">
                   {formData.profileImage ? (
                     <div className="relative">
                       <img 
                         src={formData.profileImage} 
-                        alt="Profilbild Preview"
+                        alt={t('profile.profileImage')}
                         className="w-24 h-24 rounded-full object-cover border-2 border-border mx-auto"
                       />
                       <Button
@@ -270,7 +267,7 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                       onClick={() => document.getElementById('profileImageInput')?.click()}
                     >
                       <Upload className="mr-2 h-4 w-4" />
-                      {formData.profileImage ? 'Ändern' : 'Hochladen'}
+                      {formData.profileImage ? t('actions.change') : t('actions.upload')}
                     </Button>
                     <input
                       id="profileImageInput"
@@ -290,14 +287,14 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
               <div>
                 <Label className="flex items-center gap-2 mb-3">
                   <Building2 className="h-4 w-4" />
-                  Firmenlogo
+                  {t('profile.companyLogo')}
                 </Label>
                 <div className="space-y-3">
                   {formData.companyLogo ? (
                     <div className="relative">
                       <img 
                         src={formData.companyLogo} 
-                        alt="Firmenlogo Preview"
+                        alt={t('profile.companyLogo')}
                         className="w-24 h-24 rounded-lg object-contain border-2 border-border mx-auto bg-white p-2"
                       />
                       <Button
@@ -322,7 +319,7 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
                       onClick={() => document.getElementById('companyLogoInput')?.click()}
                     >
                       <Upload className="mr-2 h-4 w-4" />
-                      {formData.companyLogo ? 'Ändern' : 'Hochladen'}
+                      {formData.companyLogo ? t('actions.change') : t('actions.upload')}
                     </Button>
                     <input
                       id="companyLogoInput"
@@ -340,13 +337,13 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
             </div>
             
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              Unterstützte Formate: JPG, PNG (max. 5MB)
+              {t('profile.supportedFormats')}
             </p>
           </Card>
 
           {/* Template Selection */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4">Design-Vorlage wählen</h3>
+            <h3 className="font-semibold mb-4">{t('profile.templateSelection')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {templates.map((template) => (
                 <Button
@@ -367,15 +364,15 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
 
           {/* Custom Color */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4">Benutzerdefinierte Farbe</h3>
+            <h3 className="font-semibold mb-4">{t('profile.customColor')}</h3>
             <div className="flex gap-3 items-center">
               <div>
-                <Label htmlFor="customColor">Hex-Farbe</Label>
+                <Label htmlFor="customColor">{t('profile.hexColor')}</Label>
                 <Input
                   id="customColor"
                   value={formData.customColor || ''}
                   onChange={(e) => handleColorChange(e.target.value)}
-                  placeholder="#a855f7"
+                  placeholder={t('profile.placeholders.hexColor')}
                   className="w-32"
                 />
               </div>
@@ -385,17 +382,17 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
               />
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Geben Sie eine Hex-Farbe ein (z.B. #a855f7) um das Design zu personalisieren
+              {t('profile.colorDescription')}
             </p>
           </Card>
 
           {/* Action Buttons */}
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Abbrechen
+              {t('actions.cancel')}
             </Button>
             <Button onClick={handleSave}>
-              Speichern
+              {t('actions.save')}
             </Button>
           </div>
         </div>

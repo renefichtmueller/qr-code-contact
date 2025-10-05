@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Mail, User, Building2, Phone } from 'lucide-react';
+import { Mail, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { 
   sanitizeString, 
   validateEmail, 
@@ -31,6 +32,7 @@ interface ContactFormData {
 }
 
 export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFormDialogProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -45,7 +47,6 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
     let sanitizedValue = value;
     
-    // Apply field-specific sanitization
     switch (field) {
       case 'name':
       case 'company':
@@ -80,36 +81,32 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
   };
 
   const handleSubmit = async () => {
-    // Sanitize all form data before validation
     const sanitizedData = sanitizeFormData(formData);
     
-    // Enhanced validation
     if (!sanitizedData.name || !sanitizedData.email) {
       toast({
-        title: "Fehlerhafte Eingabe",
-        description: "Name und E-Mail sind Pflichtfelder.",
+        title: t('toasts.requiredFields'),
+        description: t('toasts.requiredFieldsDesc'),
         variant: "destructive"
       });
       return;
     }
     
-    // Validate text lengths
     if (!validateTextLength(sanitizedData.name, 100) || 
         !validateTextLength(sanitizedData.email, 254) ||
         !validateTextLength(sanitizedData.message, 1000)) {
       toast({
-        title: "Eingabe zu lang",
-        description: "Bitte kürzen Sie Ihre Eingaben.",
+        title: t('toasts.inputTooLong'),
+        description: t('toasts.inputTooLongDesc'),
         variant: "destructive"
       });
       return;
     }
     
-    // Validate email format
     if (!validateEmail(sanitizedData.email)) {
       toast({
-        title: "Ungültige E-Mail",
-        description: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        title: t('toasts.invalidEmail'),
+        description: t('toasts.invalidEmailDesc'),
         variant: "destructive"
       });
       return;
@@ -118,38 +115,35 @@ export const ContactFormDialog = ({ open, onOpenChange, ownerEmail }: ContactFor
     setIsSubmitting(true);
 
     try {
-      // Use sanitized data for email content
-      const subject = `Neue Kontaktanfrage von ${sanitizedData.name}`;
-      const body = `Hallo,
+      const subject = `${t('contactForm.title')} ${sanitizedData.name}`;
+      const body = `${t('app.title')}
 
-${sanitizedData.name} möchte seine Kontaktdaten mit Ihnen teilen:
+${sanitizedData.name}
 
-Name: ${sanitizedData.name}
-E-Mail: ${sanitizedData.email}
-Telefon: ${sanitizedData.phone || 'Nicht angegeben'}
-Firma: ${sanitizedData.company || 'Nicht angegeben'}
-Position: ${sanitizedData.title || 'Nicht angegeben'}
+${t('profile.name')}: ${sanitizedData.name}
+${t('profile.email')}: ${sanitizedData.email}
+${t('profile.phone')}: ${sanitizedData.phone || '-'}
+${t('profile.company')}: ${sanitizedData.company || '-'}
+${t('profile.title')}: ${sanitizedData.title || '-'}
 
-${sanitizedData.message ? `Nachricht:\n${sanitizedData.message}` : ''}
+${sanitizedData.message ? `${t('contactForm.message')}:\n${sanitizedData.message}` : ''}
 
-Viele Grüße,
 ${sanitizedData.name}`;
 
-      // Open email client with sanitized data
       const mailtoUrl = `mailto:${encodeURIComponent(ownerEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(mailtoUrl);
 
       toast({
-        title: "E-Mail wird geöffnet",
-        description: "Ihre Kontaktdaten werden per E-Mail versendet."
+        title: t('toasts.emailOpened'),
+        description: t('toasts.emailOpenedDesc')
       });
 
       resetForm();
       onOpenChange(false);
     } catch (error) {
       toast({
-        title: "Fehler beim Senden",
-        description: "Die E-Mail konnte nicht geöffnet werden.",
+        title: t('toasts.sendError'),
+        description: t('toasts.sendErrorDesc'),
         variant: "destructive"
       });
     } finally {
@@ -163,37 +157,36 @@ ${sanitizedData.name}`;
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5 text-primary" />
-            Kontaktdaten teilen
+            {t('contactForm.title')}
           </DialogTitle>
         </DialogHeader>
 
         <Card className="p-4 bg-primary-soft/30 border-primary/20">
-          <p className="text-sm text-muted-foreground">
-            Füllen Sie das Formular aus, um Ihre Kontaktdaten zu teilen. 
-            Eine E-Mail mit Ihren Daten wird an <strong>{ownerEmail}</strong> gesendet.
-          </p>
+          <p className="text-sm text-muted-foreground" dangerouslySetInnerHTML={{ 
+            __html: t('contactForm.description', { email: ownerEmail }) 
+          }} />
         </Card>
 
         <div className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label htmlFor="contactName">Name *</Label>
+              <Label htmlFor="contactName">{t('profile.name')} *</Label>
               <Input
                 id="contactName"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Ihr vollständiger Name"
+                placeholder={t('profile.placeholders.name')}
                 required
               />
             </div>
             <div>
-              <Label htmlFor="contactEmail">E-Mail *</Label>
+              <Label htmlFor="contactEmail">{t('profile.email')} *</Label>
               <Input
                 id="contactEmail"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="ihre.email@beispiel.de"
+                placeholder={t('profile.placeholders.email')}
                 required
               />
             </div>
@@ -201,42 +194,42 @@ ${sanitizedData.name}`;
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label htmlFor="contactPhone">Telefon</Label>
+              <Label htmlFor="contactPhone">{t('profile.phone')}</Label>
               <Input
                 id="contactPhone"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="+49 123 456789"
+                placeholder={t('profile.placeholders.phone')}
               />
             </div>
             <div>
-              <Label htmlFor="contactCompany">Firma</Label>
+              <Label htmlFor="contactCompany">{t('profile.company')}</Label>
               <Input
                 id="contactCompany"
                 value={formData.company}
                 onChange={(e) => handleInputChange('company', e.target.value)}
-                placeholder="Firmenname"
+                placeholder={t('profile.placeholders.company')}
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="contactTitle">Position</Label>
+            <Label htmlFor="contactTitle">{t('profile.title')}</Label>
             <Input
               id="contactTitle"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="Ihre Berufsbezeichnung"
+              placeholder={t('profile.placeholders.title')}
             />
           </div>
 
           <div>
-            <Label htmlFor="contactMessage">Nachricht (optional)</Label>
+            <Label htmlFor="contactMessage">{t('contactForm.message')}</Label>
             <Textarea
               id="contactMessage"
               value={formData.message}
               onChange={(e) => handleInputChange('message', e.target.value)}
-              placeholder="Zusätzliche Informationen oder Nachricht..."
+              placeholder={t('contactForm.placeholders.message')}
               rows={3}
             />
           </div>
@@ -248,7 +241,7 @@ ${sanitizedData.name}`;
             onClick={() => onOpenChange(false)}
             disabled={isSubmitting}
           >
-            Abbrechen
+            {t('actions.cancel')}
           </Button>
           <Button 
             onClick={handleSubmit}
@@ -256,7 +249,7 @@ ${sanitizedData.name}`;
             className="bg-gradient-to-r from-primary to-primary-glow"
           >
             <Mail className="mr-2 h-4 w-4" />
-            {isSubmitting ? 'Wird gesendet...' : 'Kontakt senden'}
+            {isSubmitting ? t('actions.sending') : t('actions.send')}
           </Button>
         </div>
       </DialogContent>

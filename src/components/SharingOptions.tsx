@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { QrCode, Mail, Share2, Bluetooth, Nfc } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
+import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode';
 
 interface SharingOptionsProps {
@@ -15,9 +16,9 @@ interface SharingOptionsProps {
 }
 
 export const SharingOptions = ({ open, onOpenChange, contactData }: SharingOptionsProps) => {
+  const { t } = useTranslation();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
-  // Generate vCard data
   const generateVCard = () => {
     return `BEGIN:VCARD
 VERSION:3.0
@@ -31,7 +32,6 @@ ADR:;;${contactData.address};;;;
 END:VCARD`;
   };
 
-  // Generate QR Code
   useEffect(() => {
     if (open) {
       const vCard = generateVCard();
@@ -47,35 +47,34 @@ END:VCARD`;
   }, [open, contactData]);
 
   const handleShareEmail = () => {
-    const subject = `Kontaktdaten von ${contactData.name}`;
-    const body = `Hier sind meine Kontaktdaten:
+    const subject = `${t('contactForm.title')} ${contactData.name}`;
+    const body = `${t('app.title')}:
 
-Name: ${contactData.name}
-Position: ${contactData.title}
-Firma: ${contactData.company}
-E-Mail: ${contactData.email}
-Telefon: ${contactData.phone}
-Website: ${contactData.website}
-Adresse: ${contactData.address}
+${t('profile.name')}: ${contactData.name}
+${t('profile.title')}: ${contactData.title}
+${t('profile.company')}: ${contactData.company}
+${t('profile.email')}: ${contactData.email}
+${t('profile.phone')}: ${contactData.phone}
+${t('profile.website')}: ${contactData.website}
+${t('profile.address')}: ${contactData.address}
 
-Viele Grüße,
 ${contactData.name}`;
 
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.open(mailtoUrl);
     toast({
-      title: "E-Mail geöffnet",
-      description: "E-Mail-Client wurde geöffnet."
+      title: t('toasts.emailClientOpened'),
+      description: t('toasts.emailClientOpenedDesc')
     });
   };
 
   const handleShareSMS = () => {
-    const message = `${contactData.name} - ${contactData.title} bei ${contactData.company}. E-Mail: ${contactData.email}, Tel: ${contactData.phone}`;
+    const message = `${contactData.name} - ${contactData.title} ${t('profile.company')}: ${contactData.company}. ${t('profile.email')}: ${contactData.email}, ${t('profile.phone')}: ${contactData.phone}`;
     const smsUrl = `sms:?body=${encodeURIComponent(message)}`;
     window.open(smsUrl);
     toast({
-      title: "SMS geöffnet",
-      description: "SMS-App wurde geöffnet."
+      title: t('toasts.smsOpened'),
+      description: t('toasts.smsOpenedDesc')
     });
   };
 
@@ -83,21 +82,21 @@ ${contactData.name}`;
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Kontakt: ${contactData.name}`,
-          text: `${contactData.name} - ${contactData.title} bei ${contactData.company}`,
+          title: `${t('contactForm.title')}: ${contactData.name}`,
+          text: `${contactData.name} - ${contactData.title} ${t('profile.company')}: ${contactData.company}`,
           url: window.location.href
         });
         toast({
-          title: "Erfolgreich geteilt",
-          description: "Kontakt wurde geteilt."
+          title: t('toasts.shared'),
+          description: t('toasts.sharedDesc')
         });
       } catch (error) {
         console.log('Share cancelled');
       }
     } else {
       toast({
-        title: "Web Share nicht verfügbar",
-        description: "Ihr Browser unterstützt das Web Share API nicht."
+        title: t('toasts.webShareNotAvailable'),
+        description: t('toasts.webShareNotAvailableDesc')
       });
     }
   };
@@ -105,14 +104,13 @@ ${contactData.name}`;
   const handleNFC = () => {
     if ('NDEFWriter' in window) {
       toast({
-        title: "NFC wird vorbereitet",
-        description: "Halten Sie Ihr Gerät an ein NFC-fähiges Gerät."
+        title: t('toasts.nfcPreparing'),
+        description: t('toasts.nfcPreparingDesc')
       });
-      // NFC implementation would go here
     } else {
       toast({
-        title: "NFC nicht verfügbar",
-        description: "Ihr Gerät unterstützt kein NFC."
+        title: t('toasts.nfcNotAvailable'),
+        description: t('toasts.nfcNotAvailableDesc')
       });
     }
   };
@@ -120,14 +118,13 @@ ${contactData.name}`;
   const handleBluetooth = () => {
     if ('bluetooth' in navigator) {
       toast({
-        title: "Bluetooth wird vorbereitet",
-        description: "Bluetooth-Übertragung wird eingerichtet."
+        title: t('toasts.bluetoothPreparing'),
+        description: t('toasts.bluetoothPreparingDesc')
       });
-      // Bluetooth implementation would go here
     } else {
       toast({
-        title: "Bluetooth nicht verfügbar",
-        description: "Ihr Browser unterstützt Web Bluetooth nicht."
+        title: t('toasts.bluetoothNotAvailable'),
+        description: t('toasts.bluetoothNotAvailableDesc')
       });
     }
   };
@@ -145,8 +142,8 @@ ${contactData.name}`;
     URL.revokeObjectURL(url);
     
     toast({
-      title: "vCard heruntergeladen",
-      description: "Kontaktdatei wurde heruntergeladen."
+      title: t('toasts.vCardDownloaded'),
+      description: t('toasts.vCardDownloadedDesc')
     });
   };
 
@@ -154,7 +151,7 @@ ${contactData.name}`;
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Kontakt teilen</DialogTitle>
+          <DialogTitle>{t('sharingDialog.title')}</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -162,7 +159,7 @@ ${contactData.name}`;
           <Card className="p-6 text-center">
             <div className="mb-4">
               <QrCode className="h-8 w-8 text-primary mx-auto mb-2" />
-              <h3 className="font-semibold">QR Code</h3>
+              <h3 className="font-semibold">{t('sharingDialog.qrCodeTitle')}</h3>
             </div>
             {qrCodeUrl && (
               <div className="mb-4">
@@ -170,10 +167,10 @@ ${contactData.name}`;
               </div>
             )}
             <p className="text-sm text-muted-foreground mb-4">
-              Scannen Sie den QR-Code um die Kontaktdaten zu erhalten
+              {t('sharingDialog.qrCodeDescription')}
             </p>
             <Button onClick={downloadVCard} variant="outline" size="sm">
-              vCard herunterladen
+              {t('sharingDialog.downloadVCard')}
             </Button>
           </Card>
 
@@ -185,7 +182,7 @@ ${contactData.name}`;
               variant="outline"
             >
               <Mail className="mr-2 h-4 w-4" />
-              Per E-Mail teilen
+              {t('sharingDialog.shareEmail')}
             </Button>
 
             <Button 
@@ -194,7 +191,7 @@ ${contactData.name}`;
               variant="outline"
             >
               <Share2 className="mr-2 h-4 w-4" />
-              Per SMS teilen
+              {t('sharingDialog.shareSMS')}
             </Button>
 
             <Button 
@@ -203,7 +200,7 @@ ${contactData.name}`;
               variant="outline"
             >
               <Share2 className="mr-2 h-4 w-4" />
-              System-Share nutzen
+              {t('sharingDialog.shareSystem')}
             </Button>
 
             <Button 
@@ -212,9 +209,9 @@ ${contactData.name}`;
               variant="outline"
             >
               <Bluetooth className="mr-2 h-4 w-4" />
-              Via Bluetooth
+              {t('sharingDialog.shareBluetooth')}
               <Badge variant="secondary" className="ml-auto">
-                Beta
+                {t('sharingDialog.beta')}
               </Badge>
             </Button>
 
@@ -224,9 +221,9 @@ ${contactData.name}`;
               variant="outline"
             >
               <Nfc className="mr-2 h-4 w-4" />
-              Via NFC
+              {t('sharingDialog.shareNFC')}
               <Badge variant="secondary" className="ml-auto">
-                Beta
+                {t('sharingDialog.beta')}
               </Badge>
             </Button>
           </div>

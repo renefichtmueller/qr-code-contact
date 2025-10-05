@@ -6,8 +6,10 @@ import { ProfileCard } from '@/components/ProfileCard';
 import { SharingOptions } from '@/components/SharingOptions';
 import { ConfigDialog } from '@/components/ConfigDialog';
 import { ContactFormDialog } from '@/components/ContactFormDialog';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Settings, Share2, UserPlus } from 'lucide-react';
 import { safeJSONParse } from '@/lib/security';
+import { useTranslation } from 'react-i18next';
 
 export interface ContactData {
   name: string;
@@ -24,6 +26,7 @@ export interface ContactData {
 }
 
 const Index = () => {
+  const { t } = useTranslation();
   const [contactData, setContactData] = useState<ContactData>({
     name: 'Max Mustermann',
     title: 'Senior Developer',
@@ -73,14 +76,17 @@ const Index = () => {
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8 pt-8">
+          <div className="flex justify-end mb-4">
+            <LanguageSwitcher />
+          </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent mb-2">
-            Kontakt Teilen
+            {t('app.title')}
           </h1>
           <p className="text-muted-foreground text-lg">
-            Teilen Sie Ihre Kontaktdaten einfach und professionell
+            {t('app.subtitle')}
           </p>
           <Badge variant="secondary" className="mt-2">
-            Open Source Community
+            {t('app.badge')}
           </Badge>
         </div>
 
@@ -94,7 +100,7 @@ const Index = () => {
           {/* Actions */}
           <div className="space-y-4">
             <Card className="p-6 shadow-[var(--shadow-card)]">
-              <h3 className="text-xl font-semibold mb-4">Aktionen</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('actions.title')}</h3>
               
               <div className="space-y-3">
                 <Button 
@@ -103,7 +109,7 @@ const Index = () => {
                   size="lg"
                 >
                   <Share2 className="mr-2 h-5 w-5" />
-                  Kontakt teilen
+                  {t('actions.shareContact')}
                 </Button>
 
                 <Button 
@@ -113,7 +119,7 @@ const Index = () => {
                   size="lg"
                 >
                   <Settings className="mr-2 h-5 w-5" />
-                  Profil bearbeiten
+                  {t('actions.editProfile')}
                 </Button>
 
                 <Button 
@@ -123,20 +129,20 @@ const Index = () => {
                   size="lg"
                 >
                   <UserPlus className="mr-2 h-5 w-5" />
-                  Gegenkontakt anfragen
+                  {t('actions.requestContact')}
                 </Button>
               </div>
             </Card>
 
             {/* Info Card */}
             <Card className="p-6 bg-gradient-to-br from-primary-soft to-secondary">
-              <h4 className="font-semibold mb-2">Verfügbare Sharing-Methoden</h4>
+              <h4 className="font-semibold mb-2">{t('sharing.title')}</h4>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">QR Code</Badge>
-                <Badge variant="outline">E-Mail</Badge>
-                <Badge variant="outline">SMS</Badge>
-                <Badge variant="outline">Bluetooth</Badge>
-                <Badge variant="outline">NFC</Badge>
+                <Badge variant="outline">{t('sharing.methods.qrCode')}</Badge>
+                <Badge variant="outline">{t('sharing.methods.email')}</Badge>
+                <Badge variant="outline">{t('sharing.methods.sms')}</Badge>
+                <Badge variant="outline">{t('sharing.methods.bluetooth')}</Badge>
+                <Badge variant="outline">{t('sharing.methods.nfc')}</Badge>
               </div>
             </Card>
           </div>
