@@ -161,11 +161,11 @@ const Mobile = () => {
               <Card className="p-4 bg-gradient-to-br from-primary-soft to-secondary">
                 <h4 className="font-semibold mb-2 text-sm">{t('sharing.title')}</h4>
                 <div className="flex flex-wrap gap-1.5">
-                  <Badge variant="outline" className="text-xs">{t('sharing.methods.qrCode')}</Badge>
-                  <Badge variant="outline" className="text-xs">{t('sharing.methods.email')}</Badge>
-                  <Badge variant="outline" className="text-xs">{t('sharing.methods.sms')}</Badge>
-                  <Badge variant="outline" className="text-xs">{t('sharing.methods.bluetooth')}</Badge>
-                  <Badge variant="outline" className="text-xs">{t('sharing.methods.nfc')}</Badge>
+                  <Button variant="outline" size="sm" onClick={() => setShowSharing(true)} className="text-xs">{t('sharing.methods.qrCode')}</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowSharing(true)} className="text-xs">{t('sharing.methods.email')}</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowSharing(true)} className="text-xs">{t('sharing.methods.sms')}</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowSharing(true)} className="text-xs">{t('sharing.methods.bluetooth')}</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowSharing(true)} className="text-xs">{t('sharing.methods.nfc')}</Button>
                 </div>
               </Card>
             </TabsContent>

@@ -172,11 +172,11 @@ const Index = () => {
             <Card className="p-6 bg-gradient-to-br from-primary-soft to-secondary">
               <h4 className="font-semibold mb-2">{t('sharing.title')}</h4>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">{t('sharing.methods.qrCode')}</Badge>
-                <Badge variant="outline">{t('sharing.methods.email')}</Badge>
-                <Badge variant="outline">{t('sharing.methods.sms')}</Badge>
-                <Badge variant="outline">{t('sharing.methods.bluetooth')}</Badge>
-                <Badge variant="outline">{t('sharing.methods.nfc')}</Badge>
+                <Button variant="outline" size="sm" onClick={() => setShowSharing(true)}>{t('sharing.methods.qrCode')}</Button>
+                <Button variant="outline" size="sm" onClick={() => setShowSharing(true)}>{t('sharing.methods.email')}</Button>
+                <Button variant="outline" size="sm" onClick={() => setShowSharing(true)}>{t('sharing.methods.sms')}</Button>
+                <Button variant="outline" size="sm" onClick={() => setShowSharing(true)}>{t('sharing.methods.bluetooth')}</Button>
+                <Button variant="outline" size="sm" onClick={() => setShowSharing(true)}>{t('sharing.methods.nfc')}</Button>
               </div>
             </Card>
           </div>
