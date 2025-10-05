@@ -197,6 +197,10 @@ ${sanitizedData.name}`;
               <Label htmlFor="contactPhone">{t('profile.phone')}</Label>
               <Input
                 id="contactPhone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                pattern="^[0-9+()\\s-]*$"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 placeholder={t('profile.placeholders.phone')}

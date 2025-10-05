@@ -105,8 +105,10 @@ export const validateImageFile = (file: File): { isValid: boolean; error?: strin
 
 // Phone number sanitization
 export const sanitizePhoneNumber = (phone: string): string => {
-  // Remove all non-digits and common phone symbols, keep + for international
-  return phone.replace(/[^\\d+\\-\\s()]/g, '').trim().substring(0, 20);
+  // Allow digits, spaces, parentheses, hyphens, and a single leading plus
+  const cleaned = phone.replace(/[^\d\s()+-]/g, "");
+  const normalized = cleaned.replace(/(?!^)\+/g, "");
+  return normalized.trim().slice(0, 20);
 };
 
 // Text length validation
