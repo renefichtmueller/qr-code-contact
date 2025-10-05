@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, Globe, MapPin, Building2 } from 'lucide-react';
+import { Mail, Phone, Globe, MapPin, Building2, Tag, StickyNote } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
 
 interface ProfileCardProps {
@@ -116,6 +116,36 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
             </div>
           )}
         </div>
+
+        {/* Tags Section */}
+        {contactData.tags && contactData.tags.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <Tag className="h-4 w-4 text-primary" />
+              <span className="text-sm font-semibold">Schlagworte</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {contactData.tags.map((tag, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Notes Section */}
+        {contactData.notes && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <StickyNote className="h-4 w-4 text-primary" />
+              <span className="text-sm font-semibold">Bemerkungen</span>
+            </div>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+              {contactData.notes}
+            </p>
+          </div>
+        )}
       </div>
     </Card>
   );

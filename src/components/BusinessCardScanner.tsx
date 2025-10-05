@@ -7,6 +7,7 @@ import { Camera, Upload, Scan, Loader2 } from 'lucide-react';
 import { ContactData } from '@/pages/Index';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
+import { ContactMetadataDialog } from './ContactMetadataDialog';
 
 interface BusinessCardScannerProps {
   open: boolean;
@@ -18,6 +19,8 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
   const { t } = useTranslation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [scannedData, setScannedData] = useState<Partial<ContactData> | null>(null);
+  const [showMetadataDialog, setShowMetadataDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,7 +45,7 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
 
       console.log('Extracted data:', data.data);
 
-      // Map the extracted data to ContactData format
+      // Store scanned data temporarily
       const contactData: Partial<ContactData> = {
         name: data.data.name || '',
         title: data.data.title || '',
@@ -53,14 +56,12 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
         address: data.data.address || '',
       };
 
-      onDataExtracted(contactData);
-      onOpenChange(false);
+      setScannedData(contactData);
       setPreviewImage(null);
+      
+      // Show metadata dialog to add tags and notes
+      setShowMetadataDialog(true);
 
-      toast({
-        title: t('toasts.profileSaved'),
-        description: 'Visitenkarten-Daten erfolgreich extrahiert!',
-      });
     } catch (error) {
       console.error('Error scanning business card:', error);
       toast({
@@ -70,6 +71,25 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
       });
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleMetadataSave = (tags: string[], notes: string) => {
+    if (scannedData) {
+      const completeData = {
+        ...scannedData,
+        tags,
+        notes
+      };
+      
+      onDataExtracted(completeData);
+      onOpenChange(false);
+      setScannedData(null);
+
+      toast({
+        title: t('toasts.profileSaved'),
+        description: 'Visitenkarten-Daten erfolgreich extrahiert und kategorisiert!',
+      });
     }
   };
 
@@ -199,6 +219,12 @@ export const BusinessCardScanner = ({ open, onOpenChange, onDataExtracted }: Bus
             </div>
           )}
         </div>
+
+        <ContactMetadataDialog
+          open={showMetadataDialog}
+          onOpenChange={setShowMetadataDialog}
+          onSave={handleMetadataSave}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -25,7 +25,9 @@ const Mobile = () => {
     website: 'https://techcorp.de',
     address: 'Musterstraße 123, 12345 Berlin',
     template: 'modern',
-    customColor: '#a855f7'
+    customColor: '#a855f7',
+    tags: [],
+    notes: ''
   });
 
   const [showConfig, setShowConfig] = useState(false);
@@ -45,7 +47,9 @@ const Mobile = () => {
         website: 'https://techcorp.de',
         address: 'Musterstraße 123, 12345 Berlin',
         template: 'modern',
-        customColor: '#a855f7'
+        customColor: '#a855f7',
+        tags: [],
+        notes: ''
       };
       const parsedData = safeJSONParse(saved, defaultData);
       setContactData(parsedData);
@@ -65,7 +69,9 @@ const Mobile = () => {
       template: prev.template,
       customColor: prev.customColor,
       profileImage: prev.profileImage,
-      companyLogo: prev.companyLogo
+      companyLogo: prev.companyLogo,
+      tags: scannedData.tags || prev.tags || [],
+      notes: scannedData.notes || prev.notes || ''
     }));
     setShowConfig(true);
   };

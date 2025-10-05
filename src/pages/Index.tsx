@@ -24,6 +24,8 @@ export interface ContactData {
   companyLogo?: string;
   template: string;
   customColor?: string;
+  tags?: string[];
+  notes?: string;
 }
 
 const Index = () => {
@@ -37,7 +39,9 @@ const Index = () => {
     website: 'https://techcorp.de',
     address: 'Musterstraße 123, 12345 Berlin',
     template: 'modern',
-    customColor: '#a855f7'
+    customColor: '#a855f7',
+    tags: [],
+    notes: ''
   });
 
   const [showConfig, setShowConfig] = useState(false);
@@ -58,7 +62,9 @@ const Index = () => {
         website: 'https://techcorp.de',
         address: 'Musterstraße 123, 12345 Berlin',
         template: 'modern',
-        customColor: '#a855f7'
+        customColor: '#a855f7',
+        tags: [],
+        notes: ''
       };
       const parsedData = safeJSONParse(saved, defaultData);
       setContactData(parsedData);
@@ -80,7 +86,11 @@ const Index = () => {
       template: prev.template,
       customColor: prev.customColor,
       profileImage: prev.profileImage,
-      companyLogo: prev.companyLogo
+      companyLogo: prev.companyLogo,
+      // Merge tags if they exist
+      tags: scannedData.tags || prev.tags || [],
+      // Keep notes from scanned data
+      notes: scannedData.notes || prev.notes || ''
     }));
     setShowConfig(true);
   };
