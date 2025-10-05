@@ -159,9 +159,16 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
       <DialogContent 
         className="max-w-2xl max-h-[80vh] overflow-y-auto"
         onKeyDown={(e) => {
-          // Prevent dialog from closing on spacebar in input fields
-          if (e.key === ' ' && e.target instanceof HTMLInputElement) {
-            e.stopPropagation();
+          // Prevent dialog from interfering with spacebar in input fields
+          if (e.key === ' ') {
+            const target = e.target as HTMLElement;
+            if (
+              target instanceof HTMLInputElement || 
+              target instanceof HTMLTextAreaElement ||
+              target.isContentEditable
+            ) {
+              e.stopPropagation();
+            }
           }
         }}
       >
