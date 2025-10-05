@@ -47,8 +47,9 @@ END:VCARD`;
   }, [open, contactData]);
 
   const handleShareEmail = () => {
-    const subject = `${t('contactForm.title')} ${contactData.name}`;
-    const body = `${t('app.title')}:
+    try {
+      const subject = `${t('contactForm.title')} ${contactData.name}`;
+      const body = `${t('app.title')}:
 
 ${t('profile.name')}: ${contactData.name}
 ${t('profile.title')}: ${contactData.title}
@@ -60,71 +61,140 @@ ${t('profile.address')}: ${contactData.address}
 
 ${contactData.name}`;
 
-    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(mailtoUrl);
-    toast({
-      title: t('toasts.emailClientOpened'),
-      description: t('toasts.emailClientOpenedDesc')
-    });
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      
+      // Create a temporary anchor element
+      const a = document.createElement('a');
+      a.href = mailtoUrl;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      toast({
+        title: t('toasts.emailClientOpened'),
+        description: t('toasts.emailClientOpenedDesc')
+      });
+    } catch (error) {
+      console.error('Error opening email client:', error);
+      toast({
+        title: 'Fehler',
+        description: 'E-Mail-Client konnte nicht geöffnet werden',
+        variant: 'destructive'
+      });
+    }
   };
 
   const handleShareSMS = () => {
-    const message = `${contactData.name} - ${contactData.title} ${t('profile.company')}: ${contactData.company}. ${t('profile.email')}: ${contactData.email}, ${t('profile.phone')}: ${contactData.phone}`;
-    const smsUrl = `sms:?body=${encodeURIComponent(message)}`;
-    window.open(smsUrl);
-    toast({
-      title: t('toasts.smsOpened'),
-      description: t('toasts.smsOpenedDesc')
-    });
+    try {
+      const message = `${contactData.name} - ${contactData.title} ${t('profile.company')}: ${contactData.company}. ${t('profile.email')}: ${contactData.email}, ${t('profile.phone')}: ${contactData.phone}`;
+      const smsUrl = `sms:?body=${encodeURIComponent(message)}`;
+      
+      // Create a temporary anchor element
+      const a = document.createElement('a');
+      a.href = smsUrl;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      toast({
+        title: t('toasts.smsOpened'),
+        description: t('toasts.smsOpenedDesc')
+      });
+    } catch (error) {
+      console.error('Error opening SMS app:', error);
+      toast({
+        title: 'Fehler',
+        description: 'SMS-App konnte nicht geöffnet werden',
+        variant: 'destructive'
+      });
+    }
   };
 
   const handleWebShare = async () => {
     if (navigator.share) {
       try {
+        const vCard = generateVCard();
         await navigator.share({
           title: `${t('contactForm.title')}: ${contactData.name}`,
-          text: `${contactData.name} - ${contactData.title} ${t('profile.company')}: ${contactData.company}`,
-          url: window.location.href
+          text: `${contactData.name} - ${contactData.title}\n${t('profile.company')}: ${contactData.company}\n${t('profile.email')}: ${contactData.email}\n${t('profile.phone')}: ${contactData.phone}`,
         });
         toast({
           title: t('toasts.shared'),
           description: t('toasts.sharedDesc')
         });
-      } catch (error) {
-        console.log('Share cancelled');
+      } catch (error: any) {
+        if (error.name !== 'AbortError') {
+          console.error('Error sharing:', error);
+          toast({
+            title: 'Fehler beim Teilen',
+            description: 'Das Teilen wurde abgebrochen oder ist fehlgeschlagen',
+            variant: 'destructive'
+          });
+        }
       }
     } else {
       toast({
         title: t('toasts.webShareNotAvailable'),
-        description: t('toasts.webShareNotAvailableDesc')
+        description: t('toasts.webShareNotAvailableDesc'),
+        variant: 'destructive'
       });
     }
   };
 
-  const handleNFC = () => {
-    if ('NDEFWriter' in window) {
-      toast({
-        title: t('toasts.nfcPreparing'),
-        description: t('toasts.nfcPreparingDesc')
-      });
+  const handleNFC = async () => {
+    if ('NDEFReader' in window) {
+      try {
+        const vCard = generateVCard();
+        // @ts-ignore - NDEFWriter is experimental
+        const ndef = new NDEFWriter();
+        await ndef.write({
+          records: [{ recordType: "text", data: vCard }]
+        });
+        
+        toast({
+          title: 'NFC bereit',
+          description: 'Halten Sie Ihr Gerät an ein anderes NFC-fähiges Gerät'
+        });
+      } catch (error) {
+        console.error('NFC Error:', error);
+        toast({
+          title: 'NFC-Fehler',
+          description: 'NFC konnte nicht aktiviert werden. Bitte prüfen Sie die Berechtigungen.',
+          variant: 'destructive'
+        });
+      }
     } else {
       toast({
         title: t('toasts.nfcNotAvailable'),
-        description: t('toasts.nfcNotAvailableDesc')
+        description: t('toasts.nfcNotAvailableDesc'),
+        variant: 'destructive'
       });
     }
   };
 
-  const handleBluetooth = () => {
+  const handleBluetooth = async () => {
     if ('bluetooth' in navigator) {
-      toast({
-        title: t('toasts.bluetoothPreparing'),
-        description: t('toasts.bluetoothPreparingDesc')
-      });
+      try {
+        toast({
+          title: 'Bluetooth nicht vollständig implementiert',
+          description: 'Diese Funktion ist noch in Entwicklung. Bitte verwenden Sie eine andere Freigabemethode.',
+          variant: 'destructive'
+        });
+      } catch (error) {
+        console.error('Bluetooth Error:', error);
+        toast({
+          title: t('toasts.bluetoothNotAvailable'),
+          description: 'Bluetooth konnte nicht aktiviert werden',
+          variant: 'destructive'
+        });
+      }
     } else {
       toast({
         title: t('toasts.bluetoothNotAvailable'),
-        description: t('toasts.bluetoothNotAvailableDesc')
+        description: t('toasts.bluetoothNotAvailableDesc'),
+        variant: 'destructive'
       });
     }
   };
