@@ -26,6 +26,13 @@ export interface ContactData {
   customColor?: string;
   tags?: string[];
   notes?: string;
+  colors?: {
+    header?: string;
+    icons?: string;
+    text?: string;
+    badges?: string;
+    hover?: string;
+  };
 }
 
 const Index = () => {

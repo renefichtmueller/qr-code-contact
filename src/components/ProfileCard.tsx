@@ -29,9 +29,15 @@ const templateStyles = {
 export const ProfileCard = ({ contactData }: ProfileCardProps) => {
   const template = templateStyles[contactData.template as keyof typeof templateStyles] || templateStyles.modern;
   
-  // Use custom color if provided
-  const customStyle = contactData.customColor ? {
-    background: `linear-gradient(135deg, ${contactData.customColor}, ${contactData.customColor}dd)`
+  // Use custom colors if provided
+  const headerColor = contactData.colors?.header || contactData.customColor;
+  const iconColor = contactData.colors?.icons;
+  const textColor = contactData.colors?.text;
+  const badgeColor = contactData.colors?.badges;
+  const hoverColor = contactData.colors?.hover;
+  
+  const customStyle = headerColor ? {
+    background: `linear-gradient(135deg, ${headerColor}, ${headerColor}dd)`
   } : {};
 
   return (
@@ -39,7 +45,7 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
       {/* Header with gradient */}
       <div 
         className={`h-32 bg-gradient-to-r ${template.gradient} relative`}
-        style={contactData.customColor ? customStyle : {}}
+        style={headerColor ? customStyle : {}}
       >
         <div className="absolute inset-0 bg-black/10" />
         {/* Company logo positioned top right */}
@@ -66,7 +72,13 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-primary-soft to-primary flex items-center justify-center text-primary font-bold text-2xl">
+              <div 
+                className="w-full h-full rounded-full bg-gradient-to-br from-primary-soft to-primary flex items-center justify-center text-primary font-bold text-2xl"
+                style={headerColor ? { 
+                  background: `linear-gradient(135deg, ${headerColor}22, ${headerColor})`,
+                  color: headerColor 
+                } : {}}
+              >
                 {contactData.name.split(' ').map(n => n[0]).join('')}
               </div>
             )}
@@ -75,13 +87,23 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
 
         {/* Name & Title */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-1">
+          <h2 
+            className="text-2xl font-bold text-foreground mb-1"
+            style={textColor ? { color: textColor } : {}}
+          >
             {contactData.name}
           </h2>
-          <p className="text-primary font-medium mb-1">
+          <p 
+            className="text-primary font-medium mb-1"
+            style={textColor ? { color: textColor } : {}}
+          >
             {contactData.title}
           </p>
-          <Badge variant="secondary" className="mb-2">
+          <Badge 
+            variant="secondary" 
+            className="mb-2"
+            style={badgeColor ? { backgroundColor: `${badgeColor}22`, color: badgeColor, borderColor: `${badgeColor}44` } : {}}
+          >
             {contactData.company}
           </Badge>
         </div>
@@ -89,29 +111,46 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
         {/* Contact Information */}
         <div className="space-y-3">
           {contactData.email && (
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors">
-              <Mail className="h-4 w-4 text-primary" />
+            <div 
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors"
+              style={hoverColor ? { '--hover-bg': `${hoverColor}22` } as React.CSSProperties : {}}
+              onMouseEnter={(e) => hoverColor && (e.currentTarget.style.backgroundColor = `${hoverColor}22`)}
+              onMouseLeave={(e) => hoverColor && (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <Mail className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm text-foreground">{contactData.email}</span>
             </div>
           )}
           
           {contactData.phone && (
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors">
-              <Phone className="h-4 w-4 text-primary" />
+            <div 
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors"
+              onMouseEnter={(e) => hoverColor && (e.currentTarget.style.backgroundColor = `${hoverColor}22`)}
+              onMouseLeave={(e) => hoverColor && (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <Phone className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm text-foreground">{contactData.phone}</span>
             </div>
           )}
           
           {contactData.website && (
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors">
-              <Globe className="h-4 w-4 text-primary" />
+            <div 
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors"
+              onMouseEnter={(e) => hoverColor && (e.currentTarget.style.backgroundColor = `${hoverColor}22`)}
+              onMouseLeave={(e) => hoverColor && (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <Globe className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm text-foreground">{contactData.website}</span>
             </div>
           )}
           
           {contactData.address && (
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors">
-              <MapPin className="h-4 w-4 text-primary" />
+            <div 
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-soft/50 transition-colors"
+              onMouseEnter={(e) => hoverColor && (e.currentTarget.style.backgroundColor = `${hoverColor}22`)}
+              onMouseLeave={(e) => hoverColor && (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <MapPin className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm text-foreground">{contactData.address}</span>
             </div>
           )}
@@ -121,12 +160,17 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
         {contactData.tags && contactData.tags.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border">
             <div className="flex items-center gap-2 mb-2">
-              <Tag className="h-4 w-4 text-primary" />
+              <Tag className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm font-semibold">Schlagworte</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {contactData.tags.map((tag, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
+                <Badge 
+                  key={index} 
+                  variant="secondary" 
+                  className="text-xs"
+                  style={badgeColor ? { backgroundColor: `${badgeColor}22`, color: badgeColor, borderColor: `${badgeColor}44` } : {}}
+                >
                   {tag}
                 </Badge>
               ))}
@@ -138,7 +182,7 @@ export const ProfileCard = ({ contactData }: ProfileCardProps) => {
         {contactData.notes && (
           <div className="mt-4 pt-4 border-t border-border">
             <div className="flex items-center gap-2 mb-2">
-              <StickyNote className="h-4 w-4 text-primary" />
+              <StickyNote className="h-4 w-4 text-primary" style={iconColor ? { color: iconColor } : {}} />
               <span className="text-sm font-semibold">Bemerkungen</span>
             </div>
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">

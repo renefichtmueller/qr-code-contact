@@ -388,27 +388,143 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
             </div>
           </Card>
 
-          {/* Custom Color */}
+          {/* Custom Colors */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4">{t('profile.customColor')}</h3>
-            <div className="flex gap-3 items-center">
+            <h3 className="font-semibold mb-4">Farben anpassen</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Header Color */}
               <div>
-                <Label htmlFor="customColor">{t('profile.hexColor')}</Label>
-                <Input
-                  id="customColor"
-                  value={formData.customColor || ''}
-                  onChange={(e) => handleColorChange(e.target.value)}
-                  placeholder={t('profile.placeholders.hexColor')}
-                  className="w-32"
-                />
+                <Label htmlFor="headerColor">Header Farbe</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="headerColor"
+                    value={formData.colors?.header || formData.customColor || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || validateHexColor(value)) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          colors: { ...prev.colors, header: value },
+                          customColor: value 
+                        }));
+                      }
+                    }}
+                    placeholder="#a855f7"
+                    className="flex-1"
+                  />
+                  <div 
+                    className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
+                    style={{ backgroundColor: formData.colors?.header || formData.customColor || '#a855f7' }}
+                  />
+                </div>
               </div>
-              <div 
-                className="w-12 h-12 rounded-lg border-2 border-border"
-                style={{ backgroundColor: formData.customColor || '#a855f7' }}
-              />
+
+              {/* Icons Color */}
+              <div>
+                <Label htmlFor="iconsColor">Icons Farbe</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="iconsColor"
+                    value={formData.colors?.icons || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || validateHexColor(value)) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          colors: { ...prev.colors, icons: value }
+                        }));
+                      }
+                    }}
+                    placeholder="#a855f7"
+                    className="flex-1"
+                  />
+                  <div 
+                    className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
+                    style={{ backgroundColor: formData.colors?.icons || '#a855f7' }}
+                  />
+                </div>
+              </div>
+
+              {/* Text Color */}
+              <div>
+                <Label htmlFor="textColor">Text Farbe</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="textColor"
+                    value={formData.colors?.text || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || validateHexColor(value)) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          colors: { ...prev.colors, text: value }
+                        }));
+                      }
+                    }}
+                    placeholder="#000000"
+                    className="flex-1"
+                  />
+                  <div 
+                    className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
+                    style={{ backgroundColor: formData.colors?.text || '#000000' }}
+                  />
+                </div>
+              </div>
+
+              {/* Badges Color */}
+              <div>
+                <Label htmlFor="badgesColor">Badges Farbe</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="badgesColor"
+                    value={formData.colors?.badges || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || validateHexColor(value)) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          colors: { ...prev.colors, badges: value }
+                        }));
+                      }
+                    }}
+                    placeholder="#a855f7"
+                    className="flex-1"
+                  />
+                  <div 
+                    className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
+                    style={{ backgroundColor: formData.colors?.badges || '#a855f7' }}
+                  />
+                </div>
+              </div>
+
+              {/* Hover Color */}
+              <div className="md:col-span-2">
+                <Label htmlFor="hoverColor">Hover Hintergrund Farbe</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="hoverColor"
+                    value={formData.colors?.hover || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || validateHexColor(value)) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          colors: { ...prev.colors, hover: value }
+                        }));
+                      }
+                    }}
+                    placeholder="#a855f7"
+                    className="flex-1"
+                  />
+                  <div 
+                    className="w-10 h-10 rounded-lg border-2 border-border shrink-0"
+                    style={{ backgroundColor: formData.colors?.hover || '#a855f7' }}
+                  />
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              {t('profile.colorDescription')}
+            <p className="text-sm text-muted-foreground mt-4">
+              Passen Sie die Farben für verschiedene Bereiche der Visitenkarte an. Leer lassen für Standardfarben.
             </p>
           </Card>
 
