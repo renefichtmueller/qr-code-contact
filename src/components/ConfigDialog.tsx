@@ -156,7 +156,15 @@ export const ConfigDialog = ({ open, onOpenChange, contactData, onSave }: Config
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent 
+        className="max-w-2xl max-h-[80vh] overflow-y-auto"
+        onKeyDown={(e) => {
+          // Prevent dialog from closing on spacebar in input fields
+          if (e.key === ' ' && e.target instanceof HTMLInputElement) {
+            e.stopPropagation();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{t('profile.title')}</DialogTitle>
         </DialogHeader>
