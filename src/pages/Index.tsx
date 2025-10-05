@@ -6,8 +6,9 @@ import { ProfileCard } from '@/components/ProfileCard';
 import { SharingOptions } from '@/components/SharingOptions';
 import { ConfigDialog } from '@/components/ConfigDialog';
 import { ContactFormDialog } from '@/components/ContactFormDialog';
+import { BusinessCardScanner } from '@/components/BusinessCardScanner';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { Settings, Share2, UserPlus } from 'lucide-react';
+import { Settings, Share2, UserPlus, Scan } from 'lucide-react';
 import { safeJSONParse } from '@/lib/security';
 import { useTranslation } from 'react-i18next';
 
@@ -42,6 +43,7 @@ const Index = () => {
   const [showConfig, setShowConfig] = useState(false);
   const [showSharing, setShowSharing] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   // Load from localStorage on mount with safe parsing
   useEffect(() => {
@@ -70,6 +72,18 @@ const Index = () => {
       localStorage.setItem('contactData', JSON.stringify(contactData));
     }
   }, [contactData]);
+
+  const handleScannerData = (scannedData: Partial<ContactData>) => {
+    setContactData(prev => ({
+      ...prev,
+      ...scannedData,
+      template: prev.template,
+      customColor: prev.customColor,
+      profileImage: prev.profileImage,
+      companyLogo: prev.companyLogo
+    }));
+    setShowConfig(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-soft via-background to-secondary p-4">
@@ -131,6 +145,16 @@ const Index = () => {
                   <UserPlus className="mr-2 h-5 w-5" />
                   {t('actions.requestContact')}
                 </Button>
+
+                <Button 
+                  onClick={() => setShowScanner(true)}
+                  variant="outline"
+                  className="w-full border-primary/50 hover:bg-primary-soft"
+                  size="lg"
+                >
+                  <Scan className="mr-2 h-5 w-5" />
+                  Visitenkarte scannen
+                </Button>
               </div>
             </Card>
 
@@ -166,6 +190,12 @@ const Index = () => {
           open={showContactForm} 
           onOpenChange={setShowContactForm}
           ownerEmail={contactData.email}
+        />
+
+        <BusinessCardScanner
+          open={showScanner}
+          onOpenChange={setShowScanner}
+          onDataExtracted={handleScannerData}
         />
       </div>
     </div>
